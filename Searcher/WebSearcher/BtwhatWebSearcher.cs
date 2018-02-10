@@ -9,6 +9,14 @@ namespace MagnetX.Searcher.WebSearcher
 {
     class BtwhatWebSearcher : WebSearcher
     {
+        public override string Name
+        {
+            get
+            {
+                return "btwhat.net";
+            }
+        }
+
         protected override string GetURL(string word, int page)
         {
             string name = Uri.EscapeUriString(word);
@@ -28,14 +36,6 @@ namespace MagnetX.Searcher.WebSearcher
         protected Regex regMagnet = new Regex("<a href=\"\\/wiki\\/([^\\.]+)\\.", RegexOptions.Compiled);
         protected Regex regSize = new Regex("File Size[\\D]+\\>\\s*(\\d[^\\<]+)", RegexOptions.Compiled);
         protected Regex regHotness = new Regex("Hot[\\D]+([\\d]+)[\\D]+", RegexOptions.Compiled);
-
-        public override string Text
-        {
-            get
-            {
-                return "btwhat.net";
-            }
-        }
 
         protected override Result ReadPart(string part)
         {

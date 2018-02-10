@@ -40,7 +40,7 @@ namespace MagnetX
         public static IEnumerable<Searcher.Searcher> GetAllSearchers()
         {
             yield return new Bt177WebSearcher();
-            yield return new CilisharesWebSearcher();
+            yield return new CilisharexWebSearcher();
             yield return new BtwhatWebSearcher();
             yield return new Sobt8WebSearcher();
             yield return new BtceriseWebSearcher();

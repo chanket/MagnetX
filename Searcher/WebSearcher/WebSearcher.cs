@@ -10,6 +10,12 @@ namespace MagnetX.Searcher.WebSearcher
 {
     abstract class WebSearcher : Searcher
     {
+        /// <summary>
+        /// 搜索指定关键词的实现。
+        /// 对于不同的源，不需要修改这个方法，只需要继承本类，然后实现本类的抽象方法即可。
+        /// </summary>
+        /// <param name="word">关键词</param>
+        /// <returns></returns>
         public override async Task SearchAsync(string word)
         {
             bool isBreak = false;
@@ -63,11 +69,14 @@ namespace MagnetX.Searcher.WebSearcher
                     {
                         Console.WriteLine(ex.Message);
                     }
-
                 });
             });
         }
 
+        /// <summary>
+        /// 测试该源是否可用的方法。
+        /// </summary>
+        /// <returns></returns>
         public override async Task<TestResults> TestAsync()
         {
             string url = GetURL("电影", 1);
@@ -102,10 +111,26 @@ namespace MagnetX.Searcher.WebSearcher
 
         protected virtual Encoding DefaultEncoding { get; set; } = Encoding.UTF8;
 
+        /// <summary>
+        /// 抽象方法，用于获取指定关键字制定页号的搜索URL。
+        /// </summary>
+        /// <param name="word">关键字</param>
+        /// <param name="page">页号</param>
+        /// <returns></returns>
         protected abstract string GetURL(string word, int page);
 
+        /// <summary>
+        /// 抽象方法，对网页的原始内容进行预处理，返回若干个不同的分段，各个分段包含一个完整的结果。
+        /// </summary>
+        /// <param name="content">原始内容</param>
+        /// <returns></returns>
         protected abstract IEnumerable<string> GetParts(string content);
 
+        /// <summary>
+        /// 抽象方法，用于解析从GetURL方法获得的分段，返回Result类型的结果。
+        /// </summary>
+        /// <param name="part">分段</param>
+        /// <returns></returns>
         protected abstract Result ReadPart(string part);
     }
 }

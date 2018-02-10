@@ -9,6 +9,14 @@ namespace MagnetX.Searcher.WebSearcher
 {
     class BtceriseWebSearcher : WebSearcher
     {
+        public override string Name
+        {
+            get
+            {
+                return "btcerise.com";
+            }
+        }
+
         protected override string GetURL(string word, int page)
         {
             string name = Uri.EscapeUriString(word);
@@ -27,14 +35,6 @@ namespace MagnetX.Searcher.WebSearcher
         protected Regex regName = new Regex("\\<h5 class\\=\"h\"\\>(.+?)\\<\\/h5\\>", RegexOptions.Compiled);
         protected Regex regMagnet = new Regex("href=\"(magnet[^\\&^\"]+)", RegexOptions.Compiled);
         protected Regex regSize = new Regex("大小[\\D]+\\>\\s*(\\d[^\\<]+)", RegexOptions.Compiled);
-
-        public override string Text
-        {
-            get
-            {
-                return "btcerise.com";
-            }
-        }
 
         protected override Result ReadPart(string part)
         {

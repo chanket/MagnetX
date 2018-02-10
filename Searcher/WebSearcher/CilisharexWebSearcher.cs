@@ -8,8 +8,16 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-    class CilisharesWebSearcher : WebSearcher
+    class CilisharexWebSearcher : WebSearcher
     {
+        public override string Name
+        {
+            get
+            {
+                return "cilisharex.com";
+            }
+        }
+
         protected override string GetURL(string word, int page)
         {
             byte[] data = Encoding.UTF8.GetBytes(word);
@@ -18,7 +26,7 @@ namespace MagnetX.Searcher.WebSearcher
             {
                 name += Convert.ToString(data[i], 16).ToLower();
             }
-            return "http://www.cilishares.com/search/" + name + "-" + page + "-time.html";
+            return "http://www.cilisharex.com/search/" + name + "-" + page + "-time.html";
         }
 
         protected override IEnumerable<string> GetParts(string content)
@@ -34,14 +42,6 @@ namespace MagnetX.Searcher.WebSearcher
         protected Regex regMagnet = new Regex("<a href=\"(magnet[^\"]+)\"", RegexOptions.Compiled);
         protected Regex regSize = new Regex("文件大小[\\D]+\\>\\s*(\\d[^\\<]+)", RegexOptions.Compiled);
         //protected Regex regHotness = new Regex("下载热度[\\D]+([\\d]+)[\\D]+", RegexOptions.Compiled);
-
-        public override string Text
-        {
-            get
-            {
-                return "cilishares.com";
-            }
-        }
 
         protected override Result ReadPart(string part)
         {

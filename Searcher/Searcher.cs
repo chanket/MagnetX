@@ -28,7 +28,7 @@ namespace MagnetX.Searcher
 
         public bool Break { get; set; } = false;
         public object Tag { get; set; } = null;
-        public abstract string Text { get; }
+        public abstract string Name { get; }
         public abstract Task SearchAsync(string word);
         public abstract Task<TestResults> TestAsync();
     }

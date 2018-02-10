@@ -21,7 +21,7 @@ namespace MagnetX
         {
             foreach (var s in Utils.GetAllSearchers())
             {
-                ListViewItem lvi = new ListViewItem(s.Text);
+                ListViewItem lvi = new ListViewItem(s.Name);
                 lvi.SubItems.Add("");
                 lvi.Tag = s;
                 listView1.Items.Add(lvi);

@@ -9,8 +9,7 @@ namespace MagnetX.Searcher.WebSearcher
 {
     class Bt177WebSearcher : WebSearcher
     {
-
-        public override string Text
+        public override string Name
         {
             get
             {
