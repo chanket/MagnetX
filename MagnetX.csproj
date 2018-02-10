@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Searcher\WebSearcher\Sobt8WebSearcher.cs" />
+    <Compile Include="Searcher\WebSearcher\BtmuleWebSearcher.cs" />
     <Compile Include="MagnetXListView.cs">
       <SubType>Component</SubType>
     </Compile>

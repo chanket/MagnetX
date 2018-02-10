@@ -42,7 +42,7 @@ namespace MagnetX
             yield return new Bt177WebSearcher();
             yield return new CilisharexWebSearcher();
             yield return new BtwhatWebSearcher();
-            yield return new Sobt8WebSearcher();
+            yield return new BtmuleWebSearcher();
             yield return new BtceriseWebSearcher();
         }
     }

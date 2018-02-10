@@ -26,7 +26,7 @@ namespace MagnetX.Searcher.WebSearcher
             {
                 name += Convert.ToString(data[i], 16).ToLower();
             }
-            return "http://www.cilisharex.com/search/" + name + "-" + page + "-time.html";
+            return "http://www.cilisharex.com/search/" + name + "-" + page + "-d.html";
         }
 
         protected override IEnumerable<string> GetParts(string content)

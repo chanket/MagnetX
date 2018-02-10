@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-    class Sobt8WebSearcher : WebSearcher
+    class BtmuleWebSearcher : WebSearcher
     {
         public override string Name
         {
             get
             {
-                return "sobt8.com";
+                return "btmule.org";
             }
         }
 
@@ -28,7 +28,8 @@ namespace MagnetX.Searcher.WebSearcher
 
         protected override string GetURL(string word, int page)
         {
-            return "http://www.sobt8.com/q/" + word + "_rel_" + page + ".html";
+            string name = Uri.EscapeUriString(word);
+            return "http://www.btmule.org/q/" + name + ".html?sort=hits&page=" + page;
         }
 
         protected Regex regName = new Regex("target\\=\"_blank\"\\>(.+?)\\<\\/a\\>", RegexOptions.Compiled);

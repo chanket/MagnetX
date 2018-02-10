@@ -20,7 +20,7 @@ namespace MagnetX.Searcher.WebSearcher
         protected override string GetURL(string word, int page)
         {
             string name = Uri.EscapeUriString(word);
-            return "http://www.btwhat.net/search/" + name + "/" + page + "-1.html";
+            return "http://www.btwhat.net/search/" + name + "/" + page + "-3.html";
         }
 
         protected override IEnumerable<string> GetParts(string content)
