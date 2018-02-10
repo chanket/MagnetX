@@ -67,6 +67,7 @@
     <Compile Include="Searcher\Searcher.cs" />
     <Compile Include="Searcher\WebSearcher\Bt177WebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtceriseWebSearcher.cs" />
+    <Compile Include="Searcher\WebSearcher\BtrabbitWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtwhatWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\CilisharexWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\CnbtkittyWebSearcher.cs" />
