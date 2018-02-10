@@ -69,6 +69,7 @@
     <Compile Include="Searcher\WebSearcher\BtceriseWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtwhatWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\CilisharexWebSearcher.cs" />
+    <Compile Include="Searcher\WebSearcher\CnbtkittyWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\WebSearcher.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="FormMain.resx">
