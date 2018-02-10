@@ -50,6 +50,7 @@ namespace MagnetX.Searcher.WebSearcher
                 r.Size = regSize.Match(part).Groups[1].Value;
                 r.Size = r.Size.Replace(' ', ' ');
 
+                r.From = this.Name;
                 return r;
             }
             catch

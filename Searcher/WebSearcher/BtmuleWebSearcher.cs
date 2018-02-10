@@ -51,6 +51,7 @@ namespace MagnetX.Searcher.WebSearcher
                 //r.Hotness = -1;
 
                 if (r.Name.IndexOf("email") >= 0) return null;
+                r.From = this.Name;
                 return r;
             }
             catch

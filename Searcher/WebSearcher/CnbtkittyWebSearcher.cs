@@ -95,6 +95,9 @@ namespace MagnetX.Searcher.WebSearcher
                 if (r.Name.EndsWith(".torrent")) r.Name = r.Name.Substring(0, r.Name.Length - ".torrent".Length);
                 r.Magnet = regMagnet.Match(part).Groups[1].Value;
                 r.Size = regSize.Match(part).Groups[1].Value;
+
+                if (r.Name.IndexOf("email") >= 0) return null;
+                r.From = this.Name;
                 return r;
             }
             catch

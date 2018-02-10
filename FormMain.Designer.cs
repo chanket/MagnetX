@@ -41,6 +41,7 @@
             this.listViewResults = new MagnetX.MagnetXListView();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderFrom = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripResult.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -120,7 +121,8 @@
             // 
             this.listViewResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName,
-            this.columnHeaderSize});
+            this.columnHeaderSize,
+            this.columnHeaderFrom});
             this.listViewResults.FullRowSelect = true;
             this.listViewResults.Location = new System.Drawing.Point(12, 55);
             this.listViewResults.Name = "listViewResults";
@@ -134,12 +136,17 @@
             // columnHeaderName
             // 
             this.columnHeaderName.Text = "资源名";
-            this.columnHeaderName.Width = 762;
+            this.columnHeaderName.Width = 649;
             // 
             // columnHeaderSize
             // 
             this.columnHeaderSize.Text = "大小";
-            this.columnHeaderSize.Width = 75;
+            this.columnHeaderSize.Width = 81;
+            // 
+            // columnHeaderFrom
+            // 
+            this.columnHeaderFrom.Text = "来源";
+            this.columnHeaderFrom.Width = 105;
             // 
             // FormMain
             // 
@@ -176,6 +183,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 功能ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 数据源ToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader columnHeaderFrom;
     }
 }
 

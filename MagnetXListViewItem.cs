@@ -20,6 +20,7 @@ namespace MagnetX
             Result = r;
             this.SubItems[0] = new ListViewSubItem(this, r.Name);
             this.SubItems.Add(r.Size);
+            this.SubItems.Add(r.From);
         }
     }
 }

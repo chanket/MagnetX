@@ -28,7 +28,7 @@ namespace MagnetX
             listViewResults.Height = this.Height - 106;
             if (columnHeaderName.Width + columnHeaderSize.Width != listViewResults.Width - 24)
             {
-                this.columnHeaderName.Width = Math.Max(75, listViewResults.Width - 24 - (columnHeaderSize.Width));
+                this.columnHeaderName.Width = Math.Max(75, listViewResults.Width - 24 - (columnHeaderSize.Width + columnHeaderFrom.Width));
             }
         }
 

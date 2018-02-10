@@ -58,6 +58,7 @@ namespace MagnetX.Searcher.WebSearcher
                 r.Size = regSize.Match(part).Groups[1].Value;
                 //r.Hotness = int.Parse(regHotness.Match(part).Groups[1].Value);
 
+                r.From = this.Name;
                 return r;
             }
             catch

@@ -49,8 +49,10 @@ namespace MagnetX.Searcher.WebSearcher
                 r.Magnet = regMagnet.Match(part).Groups[1].Value;
                 r.Magnet = "magnet:?xt=urn:btih:" + r.Magnet;
                 r.Size = regSize.Match(part).Groups[1].Value;
+                r.Size = r.Size.Replace(" ", " ");
                 //r.Hotness = int.Parse(regHotness.Match(part).Groups[1].Value);
 
+                r.From = this.Name;
                 return r;
             }
             catch
