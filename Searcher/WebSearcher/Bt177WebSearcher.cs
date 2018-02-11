@@ -13,28 +13,29 @@ namespace MagnetX.Searcher.WebSearcher
         {
             get
             {
-                return "bt177.org";
-            }
-        }
-
-        protected override IEnumerable<string> GetParts(string content)
-        {
-            string[] parts = content.Split(new string[] { "<li><div class=\"T1\">" }, StringSplitOptions.None);
-            for (int i = 1; i < parts.Length; i++)
-            {
-                yield return parts[i];
+                return "bt177.info";
             }
         }
 
         protected override string GetURL(string word, int page)
         {
             string name = Uri.EscapeUriString(word);
-            return "http://www.bt177.org/word/" + word + "_" + page + ".html";
+            return "http://www.bt177.info/word/" + word + "_" + page + ".html";
         }
 
-        protected Regex regName = new Regex("title\\=\"(.+?)\"\\>", RegexOptions.Compiled);
-        protected Regex regMagnet = new Regex("\\<div\\s+class\\=\"dInfo\"\\>.*([a-zA-Z0-9]{40}).*\\<\\/div\\>", RegexOptions.Compiled);
-        protected Regex regSize = new Regex("大小[\\D]+\\>\\s*(\\d[^\\<]+)", RegexOptions.Compiled);
+        protected override IEnumerable<string> GetParts(string content)
+        {
+            string[] parts = content.Split(new string[] { "<li><a href=" }, StringSplitOptions.None);
+            for (int i = 1; i < parts.Length; i++)
+            {
+                if (parts[i].Length > 60 && parts[i].Length < 1000)
+                    yield return parts[i];
+            }
+        }
+
+        protected Regex regName = new Regex("title=\"(.+?)\"\\>", RegexOptions.Compiled);
+        protected Regex regMagnet = new Regex("\".+?\\/read\\/(.+?)\\.html\"", RegexOptions.Compiled);
+        protected Regex regSize = new Regex("<span>文件大小：(.+?)<\\/span>", RegexOptions.Compiled);
 
         protected override Result ReadPart(string part)
         {
