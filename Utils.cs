@@ -46,6 +46,7 @@ namespace MagnetX
             yield return new BtceriseWebSearcher();
             yield return new CnbtkittyWebSearcher();
             yield return new BtrabbitWebSearcher();
+            yield return new ZhongzisoWebSearcher();
         }
     }
 }

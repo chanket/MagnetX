@@ -78,7 +78,7 @@ namespace MagnetX.Searcher.WebSearcher
         }
 
         protected Regex regName = new Regex("target=\"_blank\">(.+?)<\\/a>", RegexOptions.Compiled);
-        protected Regex regMagnet = new Regex("'(magnet.+)'", RegexOptions.Compiled);
+        protected Regex regMagnet = new Regex("'(magnet.+?)['&]", RegexOptions.Compiled);
         protected Regex regSize = new Regex("Size(?:.+?)<b>(.+?)<\\/b>", RegexOptions.Compiled);
 
         protected override Result ReadPart(string part)
