@@ -52,6 +52,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="List\ListViewItem.cs" />
+    <Compile Include="Searcher\WebSearcher\CilibaWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtmuleWebSearcher.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>

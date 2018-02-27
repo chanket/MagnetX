@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-    class BtmuleWebSearcher : WebSearcher
+    class CilibaWebSearcher : WebSearcher
     {
         public override string Name
         {
             get
             {
-                return "btmule.org";
+                return "ciliba.org";
             }
         }
 
         protected override string GetURL(string word, int page)
         {
             string name = Uri.EscapeUriString(word);
-            return "http://www.btmule.org/q/" + name + ".html?sort=hits&page=" + page;
+            return "https://www.ciliba.org/s/" + name + "_hits_" + page + ".html";
         }
 
         protected override IEnumerable<string> GetParts(string content)
@@ -33,7 +33,7 @@ namespace MagnetX.Searcher.WebSearcher
         }
 
         protected Regex regName = new Regex("target\\=\"_blank\"\\>(.+?)\\<\\/a\\>", RegexOptions.Compiled);
-        protected Regex regMagnet = new Regex("\\/torrent\\/([a-zA-Z0-9]{40})\\.html", RegexOptions.Compiled);
+        protected Regex regMagnet = new Regex("\\/detail\\/([a-zA-Z0-9]{40})\\.html", RegexOptions.Compiled);
         protected Regex regSize = new Regex("文件大小[\\D]+\\>\\s*(\\d[^\\<]+)", RegexOptions.Compiled);
 
         protected override Result ReadPart(string part)
@@ -48,7 +48,6 @@ namespace MagnetX.Searcher.WebSearcher
                 r.Name = r.Name.Replace("<em>", "").Replace("</em>", "");
                 r.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
                 r.Size = regSize.Match(part).Groups[1].Value;
-                //r.Hotness = -1;
 
                 if (r.Name.IndexOf("email") >= 0) return null;
                 r.From = this.Name;
