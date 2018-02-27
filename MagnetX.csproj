@@ -46,9 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Searcher\WebSearcher\BtmuleWebSearcher.cs" />
-    <Compile Include="MagnetXListView.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="MagnetXListView.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,7 +61,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MagnetXListViewItem.cs" />
     <Compile Include="Searcher\Searcher.cs" />
     <Compile Include="Searcher\WebSearcher\Bt177WebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtceriseWebSearcher.cs" />

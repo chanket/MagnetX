@@ -131,5 +131,60 @@ namespace MagnetX
         {
             new FormSource().ShowDialog();
         }
+
+        private void listViewResults_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            switch (e.Column)
+            {
+                case 0:
+                    {
+                        if (listViewResults.ListViewItemSorter is MagnetXListView.MagnetXListViewNameComparer)
+                        {
+                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewNameComparer(!(listViewResults.ListViewItemSorter as MagnetXListView.MagnetXListViewNameComparer).Asc);
+                        }
+                        else
+                        {
+                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewNameComparer(true);
+                        }
+
+                        listViewResults.Sort();
+                    }break;
+
+                case 1:
+                    {
+                        if (listViewResults.ListViewItemSorter is MagnetXListView.MagnetXListViewSizeComparer)
+                        {
+                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewSizeComparer(!(listViewResults.ListViewItemSorter as MagnetXListView.MagnetXListViewSizeComparer).Asc);
+                        }
+                        else
+                        {
+                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewSizeComparer(true);
+                        }
+
+                        listViewResults.Sort();
+                    }
+                    break;
+
+                case 2:
+                    {
+                        if (listViewResults.ListViewItemSorter is MagnetXListView.MagnetXListViewFromComparer)
+                        {
+                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewFromComparer(!(listViewResults.ListViewItemSorter as MagnetXListView.MagnetXListViewFromComparer).Asc);
+                        }
+                        else
+                        {
+                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewFromComparer(true);
+                        }
+
+                        listViewResults.Sort();
+                    }
+                    break;
+            }
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

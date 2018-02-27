@@ -130,13 +130,14 @@
             this.listViewResults.TabIndex = 2;
             this.listViewResults.UseCompatibleStateImageBehavior = false;
             this.listViewResults.View = System.Windows.Forms.View.Details;
+            this.listViewResults.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewResults_ColumnClick);
             this.listViewResults.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listViewResults_MouseDoubleClick);
             this.listViewResults.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listViewResults_MouseDown);
             // 
             // columnHeaderName
             // 
             this.columnHeaderName.Text = "资源名";
-            this.columnHeaderName.Width = 649;
+            this.columnHeaderName.Width = 652;
             // 
             // columnHeaderSize
             // 
@@ -160,6 +161,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
             this.Text = "MagnetX";
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.SizeChanged += new System.EventHandler(this.FormMain_SizeChanged);
             this.contextMenuStripResult.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
