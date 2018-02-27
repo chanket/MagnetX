@@ -61,7 +61,7 @@ namespace MagnetX
                     listViewResults.BeginUpdate();
                     foreach (Result r in results)
                     {
-                        listViewResults.UniqueItemAdd(new MagnetXListViewItem(r), r.Magnet.ToLower());
+                        listViewResults.UniqueItemAdd(new List.ListViewItem(r), r.Magnet.ToLower());
                     }
                     listViewResults.EndUpdate();
 
@@ -79,7 +79,7 @@ namespace MagnetX
             {
                 if (listViewResults.SelectedItems.Count != 0)
                 {
-                    var r = (listViewResults.SelectedItems[0] as MagnetXListViewItem).Result;
+                    var r = (listViewResults.SelectedItems[0] as List.ListViewItem).Result;
                     contextMenuStripResult.Items[2].Text = r.Name;
                     toCopy = r.Magnet;
                     contextMenuStripResult.Show(listViewResults, new Point(e.X, e.Y));
@@ -93,7 +93,7 @@ namespace MagnetX
             {
                 if (listViewResults.SelectedItems.Count != 0)
                 {
-                    var r = (listViewResults.SelectedItems[0] as MagnetXListViewItem).Result;
+                    var r = (listViewResults.SelectedItems[0] as List.ListViewItem).Result;
                     Process.Start(r.Magnet);
                 }
             }
@@ -138,13 +138,13 @@ namespace MagnetX
             {
                 case 0:
                     {
-                        if (listViewResults.ListViewItemSorter is MagnetXListView.MagnetXListViewNameComparer)
+                        if (listViewResults.ListViewItemSorter is List.Comparers.NameComparer)
                         {
-                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewNameComparer(!(listViewResults.ListViewItemSorter as MagnetXListView.MagnetXListViewNameComparer).Asc);
+                            listViewResults.ListViewItemSorter = new List.Comparers.NameComparer(!(listViewResults.ListViewItemSorter as List.Comparers.NameComparer).Asc);
                         }
                         else
                         {
-                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewNameComparer(true);
+                            listViewResults.ListViewItemSorter = new List.Comparers.NameComparer(true);
                         }
 
                         listViewResults.Sort();
@@ -152,13 +152,13 @@ namespace MagnetX
 
                 case 1:
                     {
-                        if (listViewResults.ListViewItemSorter is MagnetXListView.MagnetXListViewSizeComparer)
+                        if (listViewResults.ListViewItemSorter is List.Comparers.SizeComparer)
                         {
-                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewSizeComparer(!(listViewResults.ListViewItemSorter as MagnetXListView.MagnetXListViewSizeComparer).Asc);
+                            listViewResults.ListViewItemSorter = new List.Comparers.SizeComparer(!(listViewResults.ListViewItemSorter as List.Comparers.SizeComparer).Asc);
                         }
                         else
                         {
-                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewSizeComparer(true);
+                            listViewResults.ListViewItemSorter = new List.Comparers.SizeComparer(true);
                         }
 
                         listViewResults.Sort();
@@ -167,13 +167,13 @@ namespace MagnetX
 
                 case 2:
                     {
-                        if (listViewResults.ListViewItemSorter is MagnetXListView.MagnetXListViewFromComparer)
+                        if (listViewResults.ListViewItemSorter is List.Comparers.FromComparer)
                         {
-                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewFromComparer(!(listViewResults.ListViewItemSorter as MagnetXListView.MagnetXListViewFromComparer).Asc);
+                            listViewResults.ListViewItemSorter = new List.Comparers.FromComparer(!(listViewResults.ListViewItemSorter as List.Comparers.FromComparer).Asc);
                         }
                         else
                         {
-                            listViewResults.ListViewItemSorter = new MagnetXListView.MagnetXListViewFromComparer(true);
+                            listViewResults.ListViewItemSorter = new List.Comparers.FromComparer(true);
                         }
 
                         listViewResults.Sort();

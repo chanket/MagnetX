@@ -45,8 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="List\Comparers\NameComparer.cs" />
+    <Compile Include="List\Comparers\SizeComparer.cs" />
+    <Compile Include="List\Comparers\FromComparer.cs" />
+    <Compile Include="List\ListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="List\ListViewItem.cs" />
     <Compile Include="Searcher\WebSearcher\BtmuleWebSearcher.cs" />
-    <Compile Include="MagnetXListView.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
