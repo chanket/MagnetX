@@ -13,14 +13,14 @@ namespace MagnetX.Searcher.WebSearcher
         {
             get
             {
-                return "btcerise.com";
+                return "btcerise.me";
             }
         }
 
         protected override string GetURL(string word, int page)
         {
             string name = Uri.EscapeUriString(word);
-            return "http://www.btcerise.com/search?keyword=" + name + "&p=" + page;
+            return "http://www.btcerise.me/search?keyword=" + name + "&p=" + page;
         }
 
         protected override IEnumerable<string> GetParts(string content)

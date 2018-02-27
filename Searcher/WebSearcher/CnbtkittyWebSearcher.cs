@@ -14,7 +14,7 @@ namespace MagnetX.Searcher.WebSearcher
         {
             get
             {
-                return "cnbtkitty.com";
+                return "cnbtkitty.net";
             }
         }
 
@@ -30,7 +30,7 @@ namespace MagnetX.Searcher.WebSearcher
 
             if (Words.ContainsKey(word))
             {
-                return "http://cnbtkitty.com/search/" + Words[word] + "/" + page + "/4/0.html";
+                return "http://cnbtkitty.net/search/" + Words[word] + "/" + page + "/4/0.html";
             }
             else
             {
@@ -42,7 +42,8 @@ namespace MagnetX.Searcher.WebSearcher
                 {
                     var client = new HttpClient();
                     var content = new FormUrlEncodedContent(form);
-                    var task = client.PostAsync("http://cnbtkitty.com", content);
+                    var task = client.PostAsync("http://cnbtkitty.net", content);
+                    task.ConfigureAwait(false);
                     task.Wait();
 
                     if (!task.IsCompleted)
