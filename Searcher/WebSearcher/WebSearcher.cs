@@ -81,7 +81,7 @@ namespace MagnetX.Searcher.WebSearcher
         {
             string url = GetURL("电影", 1);
             HttpClient hc = new HttpClient();
-            hc.Timeout = TimeSpan.FromMilliseconds(5000);
+            hc.Timeout = TimeSpan.FromMilliseconds(10000);
             try
             {
                 var resp = await hc.GetAsync(url);
