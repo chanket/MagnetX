@@ -48,7 +48,6 @@ namespace MagnetX.Searcher.WebSearcher
                 r.Name = r.Name.Replace("<span class='highlight'>", "");
                 r.Name = r.Name.Replace("</span>", "");
                 r.Magnet = regMagnet.Match(part).Groups[1].Value;
-                r.Magnet = "magnet:?xt=urn:btih:" + r.Magnet;
                 r.Size = regSize.Match(part).Groups[1].Value;
                 r.Size = r.Size.Replace(' ', ' ');
                 return r;
