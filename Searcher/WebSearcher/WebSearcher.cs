@@ -38,7 +38,7 @@ namespace MagnetX.Searcher.WebSearcher
                                 var resp = await hc.GetAsync(url);
                                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                                 {
-                                    foreach (string part in GetParts(await resp.Content.ReadAsStringAsync()))
+                                    foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync()))
                                     {
                                         var result = ReadPart(part);
                                         if (result != null) list.Add(ReadPart(part));
@@ -87,7 +87,7 @@ namespace MagnetX.Searcher.WebSearcher
                 var resp = await hc.GetAsync(url);
                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    foreach (string part in GetParts(await resp.Content.ReadAsStringAsync()))
+                    foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync()))
                     {
                         var result = ReadPart(part);
                         if (result != null) return TestResults.OK;
@@ -124,7 +124,7 @@ namespace MagnetX.Searcher.WebSearcher
         /// </summary>
         /// <param name="content">原始内容</param>
         /// <returns></returns>
-        protected abstract IEnumerable<string> GetParts(string content);
+        protected abstract IEnumerable<string> PrepareParts(string content);
 
         /// <summary>
         /// 抽象方法，用于解析从GetURL方法获得的分段，返回Result类型的结果。

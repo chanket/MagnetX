@@ -23,7 +23,7 @@ namespace MagnetX.Searcher.WebSearcher
             return "http://www.btmule.org/q/" + name + ".html?sort=hits&page=" + page;
         }
 
-        protected override IEnumerable<string> GetParts(string content)
+        protected override IEnumerable<string> PrepareParts(string content)
         {
             string[] parts = content.Split(new string[] { "<div class=\"item-title\">" }, StringSplitOptions.None);
             for (int i = 1; i < parts.Length; i++)
@@ -38,7 +38,7 @@ namespace MagnetX.Searcher.WebSearcher
 
         protected override Result ReadPart(string part)
         {
-            Result r = new Result();
+            Result r = new Result() { From = this.Name };
             try
             {
                 if (!regName.IsMatch(part)) return null;
@@ -48,10 +48,8 @@ namespace MagnetX.Searcher.WebSearcher
                 r.Name = r.Name.Replace("<em>", "").Replace("</em>", "");
                 r.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
                 r.Size = regSize.Match(part).Groups[1].Value;
-                //r.Hotness = -1;
 
                 if (r.Name.IndexOf("email") >= 0) return null;
-                r.From = this.Name;
                 return r;
             }
             catch

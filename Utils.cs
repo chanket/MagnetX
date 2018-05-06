@@ -10,6 +10,7 @@ namespace MagnetX
     static class Utils
     {
         private static Dictionary<Type, bool> SearcherEnabled { get; } = new Dictionary<Type, bool>();
+
         public static bool GetSearcherEnabled(Searcher.Searcher s)
         {
             if (s == null) return false;
@@ -24,6 +25,7 @@ namespace MagnetX
                 return SearcherEnabled[s.GetType()];
             }
         }
+
         public static void SetSearcherEnabled(Searcher.Searcher s, bool b)
         {
             if (s == null) return;
@@ -37,17 +39,22 @@ namespace MagnetX
                 SearcherEnabled[s.GetType()] = b;
             }
         }
+
         public static IEnumerable<Searcher.Searcher> GetAllSearchers()
         {
             yield return new Bt177WebSearcher();
             yield return new CilisharexWebSearcher();
             yield return new BtwhatWebSearcher();
             yield return new BtmuleWebSearcher();
-            yield return new BtceriseWebSearcher();
-            yield return new CnbtkittyWebSearcher();
-            yield return new BtrabbitWebSearcher();
             yield return new ZhongzisoWebSearcher();
             yield return new CilibaWebSearcher();
+            yield return new BtdidiWebSearcher();
+            yield return new BtrabbitWebSearcher();
+            yield return new BtcerisesWebSearcher();
+            yield return new BtmaeWebSearcher();
+            yield return new XiguaciliWebSearcher();
+            yield return new ZhizhubWebSearcher();
+            yield return new AliciliWebSearcher();
         }
     }
 }

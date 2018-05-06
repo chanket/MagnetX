@@ -24,7 +24,7 @@ namespace MagnetX.Searcher.WebSearcher
             return "http://m.zhongziso.com/list_ctime/" + name + "/" + page;
         }
 
-        protected override IEnumerable<string> GetParts(string content)
+        protected override IEnumerable<string> PrepareParts(string content)
         {
             string[] parts = content.Split(new string[] { "<li class=\"list-group-item title" }, StringSplitOptions.None);
             for (int i = 1; i < parts.Length; i++)
@@ -39,7 +39,7 @@ namespace MagnetX.Searcher.WebSearcher
 
         protected override Result ReadPart(string part)
         {
-            Result r = new Result();
+            Result r = new Result() { From = this.Name };
             try
             {
                 if (!regName.IsMatch(part)) return null;
@@ -50,8 +50,7 @@ namespace MagnetX.Searcher.WebSearcher
                 r.Name = r.Name.Replace("</span>", "");
                 r.Magnet = regMagnet.Match(part).Groups[1].Value;
                 r.Size = regSize.Match(part).Groups[1].Value;
-
-                r.From = this.Name;
+                
                 return r;
             }
             catch
