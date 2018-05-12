@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MagnetX.Searcher.WebSearcher;
+using MagnetX.Searcher.HistorySearcher;
 
 namespace MagnetX
 {
     static class Utils
     {
         private static Dictionary<Type, bool> SearcherEnabled { get; } = new Dictionary<Type, bool>();
+
+        public static bool Cache { get; set; } = true;
+
+        public static HistorySearcher HistorySearcher { get; } = new HistorySearcher();
 
         public static bool GetSearcherEnabled(Searcher.Searcher s)
         {
@@ -42,6 +47,7 @@ namespace MagnetX
 
         public static IEnumerable<Searcher.Searcher> GetAllSearchers()
         {
+            yield return HistorySearcher;
             yield return new Bt177WebSearcher();
             yield return new CilisharexWebSearcher();
             yield return new BtwhatWebSearcher();

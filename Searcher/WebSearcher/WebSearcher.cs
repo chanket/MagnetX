@@ -35,10 +35,10 @@ namespace MagnetX.Searcher.WebSearcher
                             hc.Timeout = TimeSpan.FromMilliseconds(5000 + ntry * 250);
                             try
                             {
-                                var resp = await hc.GetAsync(url);
+                                var resp = await hc.GetAsync(url).ConfigureAwait(false);
                                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                                 {
-                                    foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync()))
+                                    foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync().ConfigureAwait(false)))
                                     {
                                         var result = ReadPart(part);
                                         if (result != null) list.Add(ReadPart(part));
@@ -47,12 +47,12 @@ namespace MagnetX.Searcher.WebSearcher
                                 }
                                 else
                                 {
-                                    await Task.Delay(250);
+                                    await Task.Delay(250).ConfigureAwait(false);
                                 }
                             }
                             catch (TaskCanceledException)
                             {
-                                await Task.Delay(250);
+                                await Task.Delay(250).ConfigureAwait(false);
                             }
                         }
 
@@ -84,10 +84,10 @@ namespace MagnetX.Searcher.WebSearcher
             hc.Timeout = TimeSpan.FromMilliseconds(10000);
             try
             {
-                var resp = await hc.GetAsync(url);
+                var resp = await hc.GetAsync(url).ConfigureAwait(false);
                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync()))
+                    foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync().ConfigureAwait(false)))
                     {
                         var result = ReadPart(part);
                         if (result != null) return TestResults.OK;

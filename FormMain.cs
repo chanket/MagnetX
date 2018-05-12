@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MagnetX.Searcher;
+using MagnetX.Searcher.HistorySearcher;
 
 namespace MagnetX
 {
@@ -49,6 +50,11 @@ namespace MagnetX
         private bool searcher_Results(Searcher.Searcher sender, List<Result> results)
         {
             bool retval = false;
+            if (!(sender is HistorySearcher) && Utils.Cache && results.Count != 0)
+            {
+                Utils.HistorySearcher.InsertAsync(results);
+            }
+
             this.Invoke(new MethodInvoker(() =>
             {
                 int gen = (int)sender.Tag;
