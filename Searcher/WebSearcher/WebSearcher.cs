@@ -18,59 +18,48 @@ namespace MagnetX.Searcher.WebSearcher
         /// <returns></returns>
         public override async Task SearchAsync(string word)
         {
-            bool isBreak = false;
-
-            await Task.Run(() => {
-                Parallel.For(1, 101, async (page) =>
+            for (int page = 1; page < 100; page++)
+            {
+                try
                 {
-                    if (isBreak) return;
-
-                    try
+                    string url = GetURL(word, page);
+                    List<Result> list = new List<Result>();
+                    for (int ntry = 0; ntry < 8; ntry++)
                     {
-                        string url = GetURL(word, page);
-                        List<Result> list = new List<Result>();
-                        for (int ntry = 0; ntry < 8 && !isBreak; ntry++)
+                        HttpClient hc = new HttpClient();
+                        hc.Timeout = TimeSpan.FromMilliseconds(5000 + ntry * 250);
+                        try
                         {
-                            HttpClient hc = new HttpClient();
-                            hc.Timeout = TimeSpan.FromMilliseconds(5000 + ntry * 250);
-                            try
+                            var resp = await hc.GetAsync(url).ConfigureAwait(false);
+                            if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                             {
-                                var resp = await hc.GetAsync(url).ConfigureAwait(false);
-                                if (resp.StatusCode == System.Net.HttpStatusCode.OK)
+                                foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync().ConfigureAwait(false)))
                                 {
-                                    foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync().ConfigureAwait(false)))
-                                    {
-                                        var result = ReadPart(part);
-                                        if (result != null) list.Add(ReadPart(part));
-                                    }
-                                    break;
+                                    var result = ReadPart(part);
+                                    if (result != null) list.Add(ReadPart(part));
                                 }
-                                else
-                                {
-                                    await Task.Delay(250).ConfigureAwait(false);
-                                }
+                                break;
                             }
-                            catch (TaskCanceledException)
+                            else
                             {
                                 await Task.Delay(250).ConfigureAwait(false);
                             }
                         }
+                        catch (TaskCanceledException)
+                        {
+                            await Task.Delay(250).ConfigureAwait(false);
+                        }
+                    }
 
-                        if (Break)
-                            isBreak = true;
-                        if (OnResults == null)
-                            isBreak = true;
-                        if (list.Count == 0)
-                            isBreak = true;
-                        if (!OnResults.Invoke(this, list))
-                            isBreak = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                });
-            });
+                    if (list.Count == 0) break;
+                    if (OnResults == null) break;
+                    if (!OnResults.Invoke(this, list)) break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
         }
 
         /// <summary>

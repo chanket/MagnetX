@@ -21,6 +21,11 @@ namespace MagnetX
             this.MinimumSize = new Size(300, 200);
         }
 
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private void FormMain_SizeChanged(object sender, EventArgs e)
         {
             textBoxWord.Width = this.Width - 125;
@@ -34,51 +39,7 @@ namespace MagnetX
         }
 
 
-        private void buttonSearch_Click(object sender, EventArgs e)
-        {
-            Search(textBoxWord.Text);
-        }
-
-        private void textBoxWord_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                Search(textBoxWord.Text);
-            }
-        }
-
-        private bool searcher_Results(Searcher.Searcher sender, List<Result> results)
-        {
-            bool retval = false;
-            if (!(sender is HistorySearcher) && Utils.Cache && results.Count != 0)
-            {
-                Utils.HistorySearcher.InsertAsync(results);
-            }
-
-            this.Invoke(new MethodInvoker(() =>
-            {
-                int gen = (int)sender.Tag;
-                if (gen != searchGeneration)
-                {
-                    retval = false;
-                }
-                else
-                {
-                    listViewResults.BeginUpdate();
-                    foreach (Result r in results)
-                    {
-                        listViewResults.UniqueItemAdd(new List.ListViewItem(r), r.Magnet.ToLower());
-                    }
-                    listViewResults.EndUpdate();
-
-                    this.Text = "MagnetX (" + listViewResults.Items.Count + "个结果)";
-
-                    retval = true;
-                }
-            }));
-            return retval;
-        }
-
+        #region ListView
         private void listViewResults_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -105,39 +66,6 @@ namespace MagnetX
             }
         }
 
-        private string toCopy = "";
-        private void 复制ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Clipboard.Clear();
-            Clipboard.SetText(toCopy);
-        }
-
-
-        private int searchGeneration = 0;
-        private void Search(string word)
-        {
-            searchGeneration++;
-            listViewResults.UniqueItemClear();
-            if (!string.IsNullOrEmpty(word))
-            {
-                foreach (var s in Utils.GetAllSearchers())
-                {
-                    if (Utils.GetSearcherEnabled(s))
-                    {
-                        s.Tag = searchGeneration;
-                        s.OnResults += searcher_Results;
-                        s.SearchAsync(word);
-                    }
-                }
-            }
-            this.Text = "MagnetX";
-        }
-
-        private void 数据源ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new FormSource().ShowDialog();
-        }
-
         private void listViewResults_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             switch (e.Column)
@@ -154,7 +82,8 @@ namespace MagnetX
                         }
 
                         listViewResults.Sort();
-                    }break;
+                    }
+                    break;
 
                 case 1:
                     {
@@ -188,9 +117,114 @@ namespace MagnetX
             }
         }
 
-        private void FormMain_Load(object sender, EventArgs e)
+        private string toCopy = "";
+        private void 复制ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            Clipboard.Clear();
+            Clipboard.SetText(toCopy);
         }
+        #endregion
+
+        #region Search
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+            Search(textBoxWord.Text);
+        }
+
+        private void textBoxWord_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Search(textBoxWord.Text);
+            }
+        }
+
+        private int searchGeneration = 0;
+
+        private async void Search(string word)
+        {
+            searchGeneration++;
+            listViewResults.UniqueItemClear();
+            this.Text = "MagnetX";
+            if (!string.IsNullOrEmpty(word))
+            {
+                foreach (var s in Utils.GetAllSearchers())
+                {
+                    if (Utils.GetSearcherEnabled(s))
+                    {
+                        s.Tag = searchGeneration;
+                        s.OnResults += OnSearchResults;
+                        s.SearchAsync(word);
+                    }
+                }
+            }
+        }
+
+        private bool OnSearchResults(Searcher.Searcher sender, List<Result> results)
+        {
+            bool retval = false;
+            if (!(sender is HistorySearcher) && Utils.Cache)
+            {
+                Utils.HistoryLogger.Insert(results);
+            }
+
+            this.Invoke(new MethodInvoker(() =>
+            {
+                int gen = (int)sender.Tag;
+                if (gen != searchGeneration)
+                {
+                    retval = false;
+                }
+                else
+                {
+                    listViewResults.BeginUpdate();
+                    foreach (Result r in results)
+                    {
+                        listViewResults.UniqueItemAdd(new List.ListViewItem(r), r.Magnet.ToLower());
+                    }
+                    listViewResults.EndUpdate();
+
+                    this.Text = "MagnetX (" + listViewResults.Items.Count + "个结果)";
+
+                    retval = true;
+                }
+            }));
+            return retval;
+        }
+
+        #endregion
+
+        #region ToolStrip
+
+        private void 数据源ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormSource().ShowDialog();
+        }
+
+        private void 保存纪录ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Utils.Cache = !Utils.Cache;
+        }
+
+        private async void 清空记录ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("你确定要这样重置你所有的搜索记录吗？", "确认", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                if (await Utils.HistoryLogger.ClearAsync())
+                {
+                    MessageBox.Show("清理完成。", "成功");
+                }
+                else
+                {
+                    MessageBox.Show("清理没有成功。", "失败");
+                }
+            }
+        }
+
+        private void menuStrip1_MenuActivate(object sender, EventArgs e)
+        {
+            保存纪录ToolStripMenuItem.Checked = Utils.Cache;
+        }
+        #endregion
     }
 }

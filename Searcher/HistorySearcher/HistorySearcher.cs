@@ -13,7 +13,6 @@ namespace MagnetX.Searcher.HistorySearcher
     {
         private static string connStr = @"Provider = Microsoft.Ace.OLEDB.12.0; Data Source = Cache.accdb; Jet OLEDB:Database Password=MAGNETX";
         private static string searchPrefixStr = @"SELECT `ID`,`Promote`,`Size` FROM `Data`";
-        private static string insertStr = @"INSERT INTO `Data` (`ID`, `Promote`, `Size`) VALUES (?, ?, ?)";
         private static OleDbCommand BuildSearch(string[] words)
         {
             string baseCmd = searchPrefixStr;
@@ -30,77 +29,6 @@ namespace MagnetX.Searcher.HistorySearcher
             }
 
             return cmd;
-        }
-        private static OleDbCommand BuildInsert(Result result)
-        {
-            string promote;
-            if (result.Name.Length > 255) promote = result.Name.Substring(0, 255);
-            else promote = result.Name;
-
-            OleDbCommand cmd = new OleDbCommand(insertStr);
-            cmd.Parameters.AddWithValue("?", result.Magnet.Substring(20, 40));
-            cmd.Parameters.AddWithValue("?", result.Name);
-            cmd.Parameters.AddWithValue("?", result.Size);
-            return cmd;
-        }
-        private static async void Insert(object _instance)
-        {
-            HistorySearcher instance = _instance as HistorySearcher;
-            List<Result> insertList = new List<Result>();
-
-            while (true)
-            {
-                try
-                {
-                    using (var conn = new OleDbConnection(connStr))
-                    {
-                        await conn.OpenAsync().ConfigureAwait(false);
-
-                        while (true)
-                        {
-                            await Task.Delay(1000).ConfigureAwait(false);
-
-                            insertList.Clear();
-                            lock (instance.InsertList)
-                            {
-                                insertList.AddRange(instance.InsertList);
-                                instance.InsertList.Clear();
-                            }
-
-                            if (insertList.Count > 0)
-                            {
-
-                                foreach (var result in insertList)
-                                {
-                                    var cmd = BuildInsert(result);
-                                    cmd.Connection = conn;
-
-                                    try
-                                    {
-                                        await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
-                                    }
-                                    catch
-                                    {
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                catch
-                {
-                    //Connection Timeout
-                }
-            }
-        }
-
-        private List<Result> InsertList { get; } = new List<Result>();
-
-        private Thread ThreadInsert { get; } = new Thread(new ParameterizedThreadStart(Insert));
-
-        public HistorySearcher()
-        {
-            ThreadInsert.Start(this);
         }
 
         public override string Name
@@ -164,14 +92,5 @@ namespace MagnetX.Searcher.HistorySearcher
                 }
             }
         }
-
-        public void InsertAsync(IEnumerable<Result> results)
-        {
-            lock (InsertList)
-            {
-                InsertList.AddRange(results);
-            }
-        }
-
     }
 }
