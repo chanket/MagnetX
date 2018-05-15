@@ -59,5 +59,15 @@ namespace MagnetX.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] Cache {
+            get {
+                object obj = ResourceManager.GetObject("Cache", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

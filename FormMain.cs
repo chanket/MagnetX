@@ -23,7 +23,10 @@ namespace MagnetX
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-
+            if (!MagnetX.Searcher.HistorySearcher.Utils.DatabaseFile.Exists)
+            {
+                MagnetX.Searcher.HistorySearcher.Utils.InitDatabase();
+            }
         }
 
         private void FormMain_SizeChanged(object sender, EventArgs e)
@@ -165,7 +168,7 @@ namespace MagnetX
             bool retval = false;
             if (!(sender is HistorySearcher) && Utils.Cache)
             {
-                Utils.HistoryLogger.Insert(results);
+                Utils.HistoryManager.Insert(results);
             }
 
             this.Invoke(new MethodInvoker(() =>
@@ -210,7 +213,7 @@ namespace MagnetX
         {
             if (MessageBox.Show("你确定要这样重置你所有的搜索记录吗？", "确认", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if (await Utils.HistoryLogger.ClearAsync())
+                if (await Utils.HistoryManager.ClearAsync())
                 {
                     MessageBox.Show("清理完成。", "成功");
                 }

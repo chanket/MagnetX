@@ -11,26 +11,6 @@ namespace MagnetX.Searcher.HistorySearcher
 {
     class HistorySearcher : Searcher
     {
-        private static string connStr = @"Provider = Microsoft.Ace.OLEDB.12.0; Data Source = Cache.accdb; Jet OLEDB:Database Password=MAGNETX";
-        private static string searchPrefixStr = @"SELECT `ID`,`Promote`,`Size` FROM `Data`";
-        private static OleDbCommand BuildSearch(string[] words)
-        {
-            string baseCmd = searchPrefixStr;
-            for (int i = 0; i < words.Length; i++)
-            {
-                if (i == 0) baseCmd += " WHERE `Promote` LIKE ?";
-                else baseCmd += " AND `Promote` LIKE ?";
-            }
-
-            OleDbCommand cmd = new OleDbCommand(baseCmd);
-            for (int i = 0; i < words.Length; i++)
-            {
-                cmd.Parameters.AddWithValue("?", "%" + words[i] + "%");
-            }
-
-            return cmd;
-        }
-
         public override string Name
         {
             get
@@ -42,13 +22,12 @@ namespace MagnetX.Searcher.HistorySearcher
         public override async Task SearchAsync(string word)
         {
             string[] words = word.Split(' ', '\t');
-            using (var conn = new OleDbConnection(connStr))
+            using (var conn = Utils.CreateConnection())
             {
                 try
                 {
                     await conn.OpenAsync().ConfigureAwait(false);
-                    var cmd = BuildSearch(words);
-                    cmd.Connection = conn;
+                    var cmd = Utils.BuildSearch(conn, words);
                     var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
 
                     List<Result> results = new List<Result>();
@@ -79,7 +58,7 @@ namespace MagnetX.Searcher.HistorySearcher
 
         public override async Task<TestResults> TestAsync()
         {
-            using (var conn = new OleDbConnection(connStr))
+            using (var conn = Utils.CreateConnection())
             {
                 try
                 {

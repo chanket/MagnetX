@@ -54,7 +54,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="List\ListViewItem.cs" />
-    <Compile Include="Searcher\HistorySearcher\HistoryLogger.cs" />
+    <Compile Include="Searcher\HistorySearcher\Utils.cs" />
+    <Compile Include="Searcher\HistorySearcher\HistoryManager.cs" />
     <Compile Include="Searcher\HistorySearcher\HistorySearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtcerisesWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtdidiWebSearcher.cs" />
@@ -114,6 +115,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Searcher\HistorySearcher\Cache.accdb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -16,7 +16,7 @@ namespace MagnetX
 
         public static HistorySearcher HistorySearcher { get; } = new HistorySearcher();
 
-        public static HistoryLogger HistoryLogger { get; } = new HistoryLogger();
+        public static HistoryManager HistoryManager { get; } = new HistoryManager();
 
         public static bool GetSearcherEnabled(Searcher.Searcher s)
         {
