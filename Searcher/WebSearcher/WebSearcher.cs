@@ -11,7 +11,6 @@ namespace MagnetX.Searcher.WebSearcher
 {
     abstract class WebSearcher : Searcher
     {
-
         protected static Regex regCfEmail1 = new Regex("<span class=\"__cf_email__\".+?>", RegexOptions.Compiled);
         protected string HandleCfEmail(string name)
         {
@@ -40,9 +39,9 @@ namespace MagnetX.Searcher.WebSearcher
         /// </summary>
         /// <param name="word">关键词</param>
         /// <returns></returns>
-        public override async Task SearchAsync(string word)
+        public override async void SearchAsync(string word)
         {
-            for (int page = 1; page < 100; page++)
+            for (int page = 1; page < 20; page++)
             {
                 try
                 {

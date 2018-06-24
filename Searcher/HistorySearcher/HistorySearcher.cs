@@ -19,12 +19,12 @@ namespace MagnetX.Searcher.HistorySearcher
             }
         }
 
-        public override async Task SearchAsync(string word)
+        public override async void SearchAsync(string word)
         {
             string[] words = word.Split(' ', '\t');
-            using (var conn = Utils.CreateConnection())
+            try
             {
-                try
+                using (var conn = Utils.CreateConnection())
                 {
                     await conn.OpenAsync().ConfigureAwait(false);
                     var cmd = Utils.BuildSearch(conn, words);
@@ -36,7 +36,8 @@ namespace MagnetX.Searcher.HistorySearcher
                         string magnet = await reader.GetFieldValueAsync<string>(0).ConfigureAwait(false);
                         string promote = await reader.GetFieldValueAsync<string>(1).ConfigureAwait(false);
                         string size = await reader.GetFieldValueAsync<string>(2).ConfigureAwait(false);
-                        results.Add(new Result() {
+                        results.Add(new Result()
+                        {
                             Magnet = "magnet:?xt=urn:btih:" + magnet,
                             Name = promote,
                             From = Name,
@@ -52,8 +53,8 @@ namespace MagnetX.Searcher.HistorySearcher
                     }
                     if (results.Count != 0) OnResults?.Invoke(this, results);
                 }
-                catch { }
             }
+            catch { }
         }
 
         public override async Task<TestResults> TestAsync()
