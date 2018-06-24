@@ -30,6 +30,7 @@ namespace MagnetX
             yield return new DhtseakWebSearcher();
             yield return new SomagnetWebSearcher();
             yield return new WtsqyyWebSearcher();
+            yield return new CililianxWebSearcher();
         }
 
         public static void Init()

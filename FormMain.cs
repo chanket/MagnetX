@@ -141,7 +141,7 @@ namespace MagnetX
 
         private int searchGeneration = 0;
 
-        private async void Search(string word)
+        private void Search(string word)
         {
             searchGeneration++;
             listViewResults.UniqueItemClear();
