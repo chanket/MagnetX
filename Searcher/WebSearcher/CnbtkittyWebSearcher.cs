@@ -62,8 +62,8 @@ namespace MagnetX.Searcher.WebSearcher
 				{
 					result.Name = result.Name.Substring(0, result.Name.Length - ".torrent".Length);
 				}
-				result.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
-				result.Size = matchMagnet.Groups[1].Value;
+				result.Magnet = "magnet:?xt=urn:btih:" + matchMagnet.Groups[1].Value;
+				result.Size = matchSize.Groups[1].Value;
 				return result;
 			}
 			catch

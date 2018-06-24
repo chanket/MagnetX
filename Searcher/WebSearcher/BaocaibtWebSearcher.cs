@@ -51,7 +51,7 @@ namespace MagnetX.Searcher.WebSearcher
 
                 result.Name = matchName.Groups[1].Value;
 				result.Magnet = "magnet:?xt=urn:btih:" + matchMagnet.Groups[1].Value;
-				result.Size = matchMagnet.Groups[1].Value;
+				result.Size = matchSize.Groups[1].Value;
 				return result;
 			}
 			catch

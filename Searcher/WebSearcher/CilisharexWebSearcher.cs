@@ -44,7 +44,7 @@ namespace MagnetX.Searcher.WebSearcher
 
         protected override async Task<Result> ReadPart(string part)
         {
-            Result r = new Result() { From = this.Name };
+            Result result = new Result() { From = this.Name };
             try
             {
                 var matchName = regName.Match(part);
@@ -52,10 +52,10 @@ namespace MagnetX.Searcher.WebSearcher
                 var matchSize = regSize.Match(part);
                 if (!matchName.Success || !matchMagnet.Success || !matchSize.Success) return null;
 
-                r.Name = Uri.UnescapeDataString(regName.Match(part).Groups[1].Value);
-                r.Magnet = regMagnet.Match(part).Groups[1].Value;
-                r.Size = regSize.Match(part).Groups[1].Value;
-                return r;
+                result.Name = Uri.UnescapeDataString(matchName.Groups[1].Value);
+                result.Magnet = matchMagnet.Groups[1].Value;
+                result.Size = matchSize.Groups[1].Value;
+                return result;
             }
             catch
             {

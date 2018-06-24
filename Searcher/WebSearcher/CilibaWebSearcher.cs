@@ -47,8 +47,8 @@ namespace MagnetX.Searcher.WebSearcher
                 if (!matchName.Success || !matchMagnet.Success || !matchSize.Success) return null;
 
                 result.Name = matchName.Groups[1].Value.Replace("<em>", "").Replace("</em>", "");
-				result.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
-				result.Size = matchMagnet.Groups[1].Value;
+				result.Magnet = "magnet:?xt=urn:btih:" + matchMagnet.Groups[1].Value;
+				result.Size = matchSize.Groups[1].Value;
 				return result;
 			}
 			catch

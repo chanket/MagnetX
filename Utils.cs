@@ -29,6 +29,7 @@ namespace MagnetX
             yield return new BtsoWebSearcher();
             yield return new DhtseakWebSearcher();
             yield return new SomagnetWebSearcher();
+            yield return new WtsqyyWebSearcher();
         }
 
         public static void Init()
