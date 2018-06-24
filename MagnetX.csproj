@@ -60,6 +60,7 @@
     <Compile Include="Searcher\HistorySearcher\HistorySearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BaocaibtWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtcatWebSearcher.cs" />
+    <Compile Include="Searcher\WebSearcher\DhtseakWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtmuleWebSearcher.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>

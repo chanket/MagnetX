@@ -10,14 +10,14 @@ namespace MagnetX.Searcher.WebSearcher
 
 		protected Regex regMagnet = new Regex("/([a-zA-Z0-9]{40})/", RegexOptions.Compiled);
 
-		protected Regex regSize = new Regex("resultdivbottonlength.+?>(.+?)<", RegexOptions.Compiled);
+		protected Regex regSize = new Regex("resultdivbottonlength\">(.+?)<", RegexOptions.Compiled);
 
 		public override string Name => "idope.se";
 
 		protected override string GetURL(string word, int page)
 		{
 			string text = Uri.EscapeUriString(word);
-			return "https://idope.se/torrent-list/" + word + "/?p=" + page;
+			return "https://idope.se/torrent-list/" + text + "/?p=" + page;
 		}
 
 		protected override IEnumerable<string> PrepareParts(string content)
@@ -39,20 +39,11 @@ namespace MagnetX.Searcher.WebSearcher
 				From = Name
 			};
 			try
-			{
-				if (!regName.IsMatch(part))
-				{
-					return null;
-				}
-				if (!regMagnet.IsMatch(part))
-				{
-					return null;
-				}
-				if (!regSize.IsMatch(part))
-				{
-					return null;
-				}
-				result.Name = regName.Match(part).Groups[1].Value;
+            {
+                if (!regName.IsMatch(part)) return null;
+                if (!regMagnet.IsMatch(part)) return null;
+                if (!regSize.IsMatch(part)) return null;
+                result.Name = regName.Match(part).Groups[1].Value;
 				result.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
 				result.Size = regSize.Match(part).Groups[1].Value;
 				return result;

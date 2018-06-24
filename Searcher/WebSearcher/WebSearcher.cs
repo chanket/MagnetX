@@ -17,7 +17,12 @@ namespace MagnetX.Searcher.WebSearcher
         /// <returns></returns>
         protected virtual HttpClient CreateHttpClient()
         {
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = new HttpClient(new HttpClientHandler()
+            {
+                AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+            }, true);
+
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36");
             return httpClient;
         }
 
@@ -35,16 +40,17 @@ namespace MagnetX.Searcher.WebSearcher
                 {
                     string url = GetURL(word, page);
                     List<Result> list = new List<Result>();
-                    for (int ntry = 0; ntry < 8; ntry++)
+                    for (int ntry = 0; ntry < 4; ntry++)
                     {
                         HttpClient hc = CreateHttpClient();
-                        hc.Timeout = TimeSpan.FromMilliseconds(5000 + ntry * 250);
+                        hc.Timeout = TimeSpan.FromMilliseconds(5000 + ntry * 2000);
                         try
                         {
                             var resp = await hc.GetAsync(url).ConfigureAwait(false);
                             if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                             {
-                                foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync().ConfigureAwait(false)))
+                                string data = await hc.GetStringAsync(url).ConfigureAwait(false);
+                                foreach (string part in PrepareParts(data))
                                 {
                                     var result = ReadPart(part);
                                     if (result != null) list.Add(ReadPart(part));
@@ -108,8 +114,6 @@ namespace MagnetX.Searcher.WebSearcher
                 return TestResults.Unusable;
             }
         }
-
-        protected virtual Encoding DefaultEncoding { get; set; } = Encoding.UTF8;
 
         /// <summary>
         /// 抽象方法，用于获取指定关键字制定页号的搜索URL。
