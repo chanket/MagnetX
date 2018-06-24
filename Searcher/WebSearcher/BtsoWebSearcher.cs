@@ -18,7 +18,6 @@ namespace MagnetX.Searcher.WebSearcher
 		protected override HttpClient CreateHttpClient()
 		{
 			HttpClient httpClient = base.CreateHttpClient();
-			httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36");
 			httpClient.DefaultRequestHeaders.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
 			return httpClient;
 		}
