@@ -6,7 +6,7 @@ namespace MagnetX.Searcher.WebSearcher
 {
 	internal class IdopeWebSearcher : WebSearcher
 	{
-		protected Regex regName = new Regex("resultdivtopname.+?>(.+?)<", RegexOptions.Compiled);
+		protected Regex regName = new Regex("<div id=\"hidename.+?>(.+?)<", RegexOptions.Compiled);
 
 		protected Regex regMagnet = new Regex("/([a-zA-Z0-9]{40})/", RegexOptions.Compiled);
 

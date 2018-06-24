@@ -67,7 +67,7 @@ namespace MagnetX.Searcher.HistorySearcher
                 }
                 catch (Exception ex)
                 {
-                    return TestResults.Unusable;
+                    return TestResults.ServerError;
                 }
             }
         }

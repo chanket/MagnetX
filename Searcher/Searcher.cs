@@ -18,7 +18,9 @@ namespace MagnetX.Searcher
     {
         OK,
         Timeout,
-        Unusable,
+        ServerError,
+        FormatError,
+        UnknownError,
     }
 
     abstract class Searcher

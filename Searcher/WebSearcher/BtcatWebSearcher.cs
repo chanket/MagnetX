@@ -10,7 +10,7 @@ namespace MagnetX.Searcher.WebSearcher
 
 		protected Regex regMagnet = new Regex("/btinfo-(.+?)\\.html", RegexOptions.Compiled);
 
-		protected Regex regSize = new Regex("cpill yellow-pill.+?>(.+?)<", RegexOptions.Compiled);
+		protected Regex regSize = new Regex("cpill.+?>(.+?)<", RegexOptions.Compiled);
 
 		public override string Name => "btcat.org";
 

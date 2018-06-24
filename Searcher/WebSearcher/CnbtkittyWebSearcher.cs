@@ -72,10 +72,6 @@ namespace MagnetX.Searcher.WebSearcher
 				}
 				result.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
 				result.Size = regSize.Match(part).Groups[1].Value;
-				if (result.Name.IndexOf("email") >= 0)
-				{
-					return null;
-				}
 				result.From = Name;
 				return result;
 			}

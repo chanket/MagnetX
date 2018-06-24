@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +11,13 @@ namespace MagnetX.Searcher.WebSearcher
 {
     abstract class WebSearcher : Searcher
     {
+
+        protected static Regex regCfEmail1 = new Regex("<span class=\"__cf_email__\".+?>", RegexOptions.Compiled);
+        protected string HandleCfEmail(string name)
+        {
+            return regCfEmail1.Replace(name, "").Replace("</span>", "");
+        }
+
         /// <summary>
         /// 创建HttpClient。
         /// 子类可以重载此方法，来实现自定义请求头。
@@ -19,7 +27,7 @@ namespace MagnetX.Searcher.WebSearcher
         {
             HttpClient httpClient = new HttpClient(new HttpClientHandler()
             {
-                AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+                AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate,
             }, true);
 
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36");
@@ -53,6 +61,7 @@ namespace MagnetX.Searcher.WebSearcher
                                 foreach (string part in PrepareParts(data))
                                 {
                                     var result = ReadPart(part);
+                                    result.Name = HandleCfEmail(result.Name);
                                     if (result != null) list.Add(ReadPart(part));
                                 }
                                 break;
@@ -93,16 +102,18 @@ namespace MagnetX.Searcher.WebSearcher
                 var resp = await hc.GetAsync(url).ConfigureAwait(false);
                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    foreach (string part in PrepareParts(await resp.Content.ReadAsStringAsync().ConfigureAwait(false)))
+                    string data = await hc.GetStringAsync(url).ConfigureAwait(false);
+                    foreach (string part in PrepareParts(data))
                     {
                         var result = ReadPart(part);
-                        if (result != null) return TestResults.OK;
+                        if (result == null)
+                            return TestResults.FormatError;
                     }
-                    return TestResults.Unusable;
+                    return TestResults.OK;
                 }
                 else
                 {
-                    return TestResults.Unusable;
+                    return TestResults.ServerError;
                 }
             }
             catch (TaskCanceledException)
@@ -111,7 +122,7 @@ namespace MagnetX.Searcher.WebSearcher
             }
             catch (Exception)
             {
-                return TestResults.Unusable;
+                return TestResults.UnknownError;
             }
         }
 
