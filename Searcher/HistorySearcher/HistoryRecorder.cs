@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.HistorySearcher
 {
-    class HistoryManager
+    class HistoryRecorder
     {
         private bool Running { get; set; } = true;
         private List<Result> InsertList { get; } = new List<Result>();
@@ -26,7 +26,7 @@ namespace MagnetX.Searcher.HistorySearcher
 
                         while (Running)
                         {
-                            await Task.Delay(1000).ConfigureAwait(false);
+                            await Task.Delay(5000).ConfigureAwait(false);
 
                             insertList.Clear();
                             lock (InsertList)
@@ -58,12 +58,12 @@ namespace MagnetX.Searcher.HistorySearcher
             }
         }
 
-        public HistoryManager()
+        public HistoryRecorder()
         {
             InsertLoop();
         }
 
-        ~HistoryManager()
+        ~HistoryRecorder()
         {
             Running = false;
         }

@@ -4,29 +4,29 @@ using System.Text.RegularExpressions;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-	internal class CilibaWebSearcher : WebSearcher
+	internal class IdopeWebSearcher : WebSearcher
 	{
-		protected Regex regName = new Regex("target=\"_blank\">(.+?)<", RegexOptions.Compiled);
+		protected Regex regName = new Regex("resultdivtopname.+?>(.+?)<", RegexOptions.Compiled);
 
-		protected Regex regMagnet = new Regex("/btread/(.+?)\\.", RegexOptions.Compiled);
+		protected Regex regMagnet = new Regex("/([a-zA-Z0-9]{40})/", RegexOptions.Compiled);
 
-		protected Regex regSize = new Regex("大小:\\s+(.+?)\\s\\s", RegexOptions.Compiled);
+		protected Regex regSize = new Regex("resultdivbottonlength.+?>(.+?)<", RegexOptions.Compiled);
 
-		public override string Name => "ciliba.net";
+		public override string Name => "idope.se";
 
 		protected override string GetURL(string word, int page)
 		{
 			string text = Uri.EscapeUriString(word);
-			return "http://www.ciliba.net/word/" + text + "_" + page + ".html";
+			return "https://idope.se/torrent-list/" + word + "/?p=" + page;
 		}
 
 		protected override IEnumerable<string> PrepareParts(string content)
 		{
 			string[] parts = content.Split(new string[1]
 			{
-				"<div class=\"T1\">"
+				"<a href=\"/torrent/"
 			}, StringSplitOptions.None);
-			for (int i = 2; i < parts.Length; i++)
+			for (int i = 1; i < parts.Length; i++)
 			{
 				yield return parts[i];
 			}
@@ -53,7 +53,6 @@ namespace MagnetX.Searcher.WebSearcher
 					return null;
 				}
 				result.Name = regName.Match(part).Groups[1].Value;
-				result.Name = result.Name.Replace("<em>", "").Replace("</em>", "");
 				result.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
 				result.Size = regSize.Match(part).Groups[1].Value;
 				return result;

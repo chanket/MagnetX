@@ -23,10 +23,7 @@ namespace MagnetX
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            if (!MagnetX.Searcher.HistorySearcher.Utils.DatabaseFile.Exists)
-            {
-                MagnetX.Searcher.HistorySearcher.Utils.InitDatabase();
-            }
+            
         }
 
         private void FormMain_SizeChanged(object sender, EventArgs e)
@@ -166,9 +163,9 @@ namespace MagnetX
         private bool OnSearchResults(Searcher.Searcher sender, List<Result> results)
         {
             bool retval = false;
-            if (!(sender is HistorySearcher) && Utils.Cache)
+            if (!(sender is HistorySearcher) && Utils.RecordHistory)
             {
-                Utils.HistoryManager.Insert(results);
+                Utils.HistoryRecorder.Insert(results);
             }
 
             this.Invoke(new MethodInvoker(() =>
@@ -206,14 +203,14 @@ namespace MagnetX
 
         private void 保存纪录ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Utils.Cache = !Utils.Cache;
+            Utils.RecordHistory = !Utils.RecordHistory;
         }
 
         private async void 清空记录ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("你确定要这样重置你所有的搜索记录吗？", "确认", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if (await Utils.HistoryManager.ClearAsync())
+                if (await Utils.HistoryRecorder.ClearAsync())
                 {
                     MessageBox.Show("清理完成。", "成功");
                 }
@@ -226,7 +223,7 @@ namespace MagnetX
 
         private void menuStrip1_MenuActivate(object sender, EventArgs e)
         {
-            保存纪录ToolStripMenuItem.Checked = Utils.Cache;
+            保存纪录ToolStripMenuItem.Checked = Utils.RecordHistory;
         }
         #endregion
     }

@@ -4,35 +4,38 @@ using System.Text.RegularExpressions;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-	internal class CilibaWebSearcher : WebSearcher
+	internal class BaocaibtWebSearcher : WebSearcher
 	{
-		protected Regex regName = new Regex("target=\"_blank\">(.+?)<", RegexOptions.Compiled);
-
-		protected Regex regMagnet = new Regex("/btread/(.+?)\\.", RegexOptions.Compiled);
-
-		protected Regex regSize = new Regex("大小:\\s+(.+?)\\s\\s", RegexOptions.Compiled);
-
-		public override string Name => "ciliba.net";
+		public override string Name => "baocaibt.org";
 
 		protected override string GetURL(string word, int page)
 		{
 			string text = Uri.EscapeUriString(word);
-			return "http://www.ciliba.net/word/" + text + "_" + page + ".html";
+			return "http://www.baocaibt.org/search/" + word + "/?c=&s=create_time&p=" + page;
 		}
 
 		protected override IEnumerable<string> PrepareParts(string content)
 		{
 			string[] parts = content.Split(new string[1]
 			{
-				"<div class=\"T1\">"
+				"<td class=\"x-item\">"
 			}, StringSplitOptions.None);
-			for (int i = 2; i < parts.Length; i++)
+			for (int i = 1; i < parts.Length; i++)
 			{
-				yield return parts[i];
+				if (parts[i].Length > 60 && parts[i].Length < 1000)
+				{
+					yield return parts[i];
+				}
 			}
 		}
 
-		protected override Result ReadPart(string part)
+        protected Regex regName = new Regex("title=\"(.+?)\"", RegexOptions.Compiled);
+
+        protected Regex regMagnet = new Regex("/hash/(.+?)\"", RegexOptions.Compiled);
+
+        protected Regex regSize = new Regex("文件大小.+?>(.+?)<", RegexOptions.Compiled);
+
+        protected override Result ReadPart(string part)
 		{
 			Result result = new Result
 			{
@@ -53,8 +56,8 @@ namespace MagnetX.Searcher.WebSearcher
 					return null;
 				}
 				result.Name = regName.Match(part).Groups[1].Value;
-				result.Name = result.Name.Replace("<em>", "").Replace("</em>", "");
-				result.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
+				result.Magnet = regMagnet.Match(part).Groups[1].Value;
+				result.Magnet = "magnet:?xt=urn:btih:" + result.Magnet;
 				result.Size = regSize.Match(part).Groups[1].Value;
 				return result;
 			}

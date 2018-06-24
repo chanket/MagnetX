@@ -12,7 +12,6 @@ namespace MagnetX.Searcher
         public string Magnet { get; set; }
         public string Size { get; set; }
         public string From { get; set; }
-        //public int Hotness { get; set; }
     }
 
     public enum TestResults

@@ -11,6 +11,17 @@ namespace MagnetX.Searcher.WebSearcher
     abstract class WebSearcher : Searcher
     {
         /// <summary>
+        /// 创建HttpClient。
+        /// 子类可以重载此方法，来实现自定义请求头。
+        /// </summary>
+        /// <returns></returns>
+        protected virtual HttpClient CreateHttpClient()
+        {
+            HttpClient httpClient = new HttpClient();
+            return httpClient;
+        }
+
+        /// <summary>
         /// 搜索指定关键词的实现。
         /// 对于不同的源，不需要修改这个方法，只需要继承本类，然后实现本类的抽象方法即可。
         /// </summary>
@@ -26,7 +37,7 @@ namespace MagnetX.Searcher.WebSearcher
                     List<Result> list = new List<Result>();
                     for (int ntry = 0; ntry < 8; ntry++)
                     {
-                        HttpClient hc = new HttpClient();
+                        HttpClient hc = CreateHttpClient();
                         hc.Timeout = TimeSpan.FromMilliseconds(5000 + ntry * 250);
                         try
                         {
@@ -69,7 +80,7 @@ namespace MagnetX.Searcher.WebSearcher
         public override async Task<TestResults> TestAsync()
         {
             string url = GetURL("电影", 1);
-            HttpClient hc = new HttpClient();
+            HttpClient hc = CreateHttpClient();
             hc.Timeout = TimeSpan.FromMilliseconds(10000);
             try
             {

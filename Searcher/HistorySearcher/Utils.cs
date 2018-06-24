@@ -10,13 +10,13 @@ namespace MagnetX.Searcher.HistorySearcher
 {
     static class Utils
     {
-        private static string File { get; } = @"Cache.accdb";
+        private static string File { get; } = @"History.accdb";
 
         private static string ConnectString { get; } = @"Provider = Microsoft.Ace.OLEDB.12.0; Data Source = " + File + "; Jet OLEDB:Database Password=MAGNETX";
 
         public static FileInfo DatabaseFile { get { return new FileInfo(File); } }
 
-        public static bool InitDatabase()
+        public static bool Init()
         {
             try
             {
