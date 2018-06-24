@@ -45,7 +45,7 @@ namespace MagnetX.Searcher.WebSearcher
             {
                 try
                 {
-                    string url = GetURL(word, page);
+                    string url = await GetURL(word, page).ConfigureAwait(false);
                     List<Result> list = new List<Result>();
                     for (int ntry = 0; ntry < 4; ntry++)
                     {
@@ -59,9 +59,12 @@ namespace MagnetX.Searcher.WebSearcher
                                 string data = await hc.GetStringAsync(url).ConfigureAwait(false);
                                 foreach (string part in PrepareParts(data))
                                 {
-                                    var result = ReadPart(part);
-                                    result.Name = HandleCfEmail(result.Name);
-                                    if (result != null) list.Add(ReadPart(part));
+                                    var result = await ReadPart(part).ConfigureAwait(false);
+                                    if (result != null)
+                                    {
+                                        result.Name = HandleCfEmail(result.Name);
+                                        list.Add(result);
+                                    }
                                 }
                                 break;
                             }
@@ -93,7 +96,7 @@ namespace MagnetX.Searcher.WebSearcher
         /// <returns></returns>
         public override async Task<TestResults> TestAsync()
         {
-            string url = GetURL("电影", 1);
+            string url = await GetURL("电影", 1).ConfigureAwait(false);
             HttpClient hc = CreateHttpClient();
             hc.Timeout = TimeSpan.FromMilliseconds(10000);
             try
@@ -101,14 +104,19 @@ namespace MagnetX.Searcher.WebSearcher
                 var resp = await hc.GetAsync(url).ConfigureAwait(false);
                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                 {
+                    int count = 0;
                     string data = await hc.GetStringAsync(url).ConfigureAwait(false);
                     foreach (string part in PrepareParts(data))
                     {
-                        var result = ReadPart(part);
-                        if (result == null)
-                            return TestResults.FormatError;
+                        var result = await ReadPart(part).ConfigureAwait(false);
+                        if (result != null)
+                        {
+                            count++;
+                        }
                     }
-                    return TestResults.OK;
+
+                    if (count != 0) return TestResults.OK;
+                    else return TestResults.FormatError;
                 }
                 else
                 {
@@ -131,7 +139,7 @@ namespace MagnetX.Searcher.WebSearcher
         /// <param name="word">关键字</param>
         /// <param name="page">页号</param>
         /// <returns></returns>
-        protected abstract string GetURL(string word, int page);
+        protected abstract Task<string> GetURL(string word, int page);
 
         /// <summary>
         /// 抽象方法，对网页的原始内容进行预处理，返回若干个不同的分段，各个分段包含一个完整的结果。
@@ -145,6 +153,6 @@ namespace MagnetX.Searcher.WebSearcher
         /// </summary>
         /// <param name="part">分段</param>
         /// <returns></returns>
-        protected abstract Result ReadPart(string part);
+        protected abstract Task<Result> ReadPart(string part);
     }
 }

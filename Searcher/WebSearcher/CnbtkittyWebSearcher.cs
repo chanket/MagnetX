@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
@@ -17,7 +18,7 @@ namespace MagnetX.Searcher.WebSearcher
 
 		public override string Name => "cnbtkitty.org";
 
-		protected override string GetURL(string word, int page)
+		protected override async Task<string> GetURL(string word, int page)
 		{
 			using (MemoryStream memoryStream = new MemoryStream())
 			{
@@ -46,33 +47,23 @@ namespace MagnetX.Searcher.WebSearcher
 			}
 		}
 
-		protected override Result ReadPart(string part)
-		{
-			Result result = new Result();
-			try
-			{
-				if (!regName.IsMatch(part))
-				{
-					return null;
-				}
-				if (!regMagnet.IsMatch(part))
-				{
-					return null;
-				}
-				if (!regSize.IsMatch(part))
-				{
-					return null;
-				}
-				result.Name = regName.Match(part).Groups[1].Value;
-				result.Name = result.Name.Replace("<b>", "");
-				result.Name = result.Name.Replace("</b>", "");
+		protected override async Task<Result> ReadPart(string part)
+        {
+            Result result = new Result() { From = this.Name };
+            try
+            {
+                var matchName = regName.Match(part);
+                var matchMagnet = regMagnet.Match(part);
+                var matchSize = regSize.Match(part);
+                if (!matchName.Success || !matchMagnet.Success || !matchSize.Success) return null;
+
+                result.Name = matchName.Groups[1].Value.Replace("<b>", "").Replace("</b>", "");
 				if (result.Name.EndsWith(".torrent"))
 				{
 					result.Name = result.Name.Substring(0, result.Name.Length - ".torrent".Length);
 				}
 				result.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
-				result.Size = regSize.Match(part).Groups[1].Value;
-				result.From = Name;
+				result.Size = matchMagnet.Groups[1].Value;
 				return result;
 			}
 			catch

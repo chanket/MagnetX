@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
@@ -22,7 +23,7 @@ namespace MagnetX.Searcher.WebSearcher
 			return httpClient;
 		}
 
-		protected override string GetURL(string word, int page)
+		protected override async Task<string> GetURL(string word, int page)
 		{
 			string text = Uri.EscapeUriString(word);
 			return "https://btso.pw/search/" + text + "/page/" + page;
@@ -43,30 +44,22 @@ namespace MagnetX.Searcher.WebSearcher
 			}
 		}
 
-		protected override Result ReadPart(string part)
+		protected override async Task<Result> ReadPart(string part)
 		{
 			Result result = new Result
 			{
 				From = Name
 			};
 			try
-			{
-				if (!regName.IsMatch(part))
-				{
-					return null;
-				}
-				if (!regMagnet.IsMatch(part))
-				{
-					return null;
-				}
-				if (!regSize.IsMatch(part))
-				{
-					return null;
-				}
-				result.Name = regName.Match(part).Groups[1].Value;
-				result.Magnet = regMagnet.Match(part).Groups[1].Value;
-				result.Magnet = "magnet:?xt=urn:btih:" + result.Magnet;
-				result.Size = regSize.Match(part).Groups[1].Value;
+            {
+                var matchName = regName.Match(part);
+                var matchMagnet = regMagnet.Match(part);
+                var matchSize = regSize.Match(part);
+                if (!matchName.Success || !matchMagnet.Success || !matchSize.Success) return null;
+
+                result.Name = matchName.Groups[1].Value;
+				result.Magnet = "magnet:?xt=urn:btih:" + matchMagnet.Groups[1].Value;
+				result.Size = matchMagnet.Groups[1].Value;
 				return result;
 			}
 			catch

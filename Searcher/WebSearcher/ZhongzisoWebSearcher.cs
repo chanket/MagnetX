@@ -17,7 +17,7 @@ namespace MagnetX.Searcher.WebSearcher
             }
         }
 
-        protected override string GetURL(string word, int page)
+        protected override async Task<string> GetURL(string word, int page)
         {
             string name = Uri.EscapeUriString(word);
 
@@ -37,20 +37,19 @@ namespace MagnetX.Searcher.WebSearcher
         protected Regex regMagnet = new Regex("\"(magnet.+?)[\"&]", RegexOptions.Compiled);
         protected Regex regSize = new Regex("class=\"text-size\">(.+?)<\\/dd>", RegexOptions.Compiled);
 
-        protected override Result ReadPart(string part)
+        protected override async Task<Result> ReadPart(string part)
         {
             Result r = new Result() { From = this.Name };
             try
             {
-                if (!regName.IsMatch(part)) return null;
-                if (!regMagnet.IsMatch(part)) return null;
-                if (!regSize.IsMatch(part)) return null;
-                r.Name = regName.Match(part).Groups[1].Value;
-                r.Name = r.Name.Replace("<span class=\"highlight\">", "");
-                r.Name = r.Name.Replace("</span>", "");
+                var matchName = regName.Match(part);
+                var matchMagnet = regMagnet.Match(part);
+                var matchSize = regSize.Match(part);
+                if (!matchName.Success || !matchMagnet.Success || !matchSize.Success) return null;
+
+                r.Name = regName.Match(part).Groups[1].Value.Replace("<span class=\"highlight\">", "").Replace("</span>", "");
                 r.Magnet = regMagnet.Match(part).Groups[1].Value;
                 r.Size = regSize.Match(part).Groups[1].Value;
-                
                 return r;
             }
             catch

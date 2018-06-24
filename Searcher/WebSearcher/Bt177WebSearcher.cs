@@ -17,7 +17,7 @@ namespace MagnetX.Searcher.WebSearcher
             }
         }
 
-        protected override string GetURL(string word, int page)
+        protected override async Task<string> GetURL(string word, int page)
         {
             string name = Uri.EscapeUriString(word);
             return "http://www.bt177.info/word/" + word + "_" + page + ".html";
@@ -37,20 +37,20 @@ namespace MagnetX.Searcher.WebSearcher
         protected Regex regMagnet = new Regex("\".+?\\/read\\/(.+?)\\.html\"", RegexOptions.Compiled);
         protected Regex regSize = new Regex("<span>文件大小：(.+?)<\\/span>", RegexOptions.Compiled);
 
-        protected override Result ReadPart(string part)
+        protected override async Task<Result> ReadPart(string part)
         {
-            Result r = new Result() { From = this.Name };
+            Result result = new Result() { From = this.Name };
             try
             {
-                if (!regName.IsMatch(part)) return null;
-                if (!regMagnet.IsMatch(part)) return null;
-                if (!regSize.IsMatch(part)) return null;
-                r.Name = regName.Match(part).Groups[1].Value;
-                r.Magnet = regMagnet.Match(part).Groups[1].Value;
-                r.Magnet = "magnet:?xt=urn:btih:" + r.Magnet;
-                r.Size = regSize.Match(part).Groups[1].Value;
-                r.Size = r.Size.Replace(' ', ' ');
-                return r;
+                var matchName = regName.Match(part);
+                var matchMagnet = regMagnet.Match(part);
+                var matchSize = regSize.Match(part);
+                if (!matchName.Success || !matchMagnet.Success || !matchSize.Success) return null;
+
+                result.Name = regName.Match(part).Groups[1].Value;
+                result.Magnet = "magnet:?xt=urn:btih:" + regMagnet.Match(part).Groups[1].Value;
+                result.Size = regSize.Match(part).Groups[1].Value.Replace(' ', ' ');
+                return result;
             }
             catch
             {

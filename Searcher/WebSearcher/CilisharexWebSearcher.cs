@@ -18,7 +18,7 @@ namespace MagnetX.Searcher.WebSearcher
             }
         }
 
-        protected override string GetURL(string word, int page)
+        protected override async Task<string> GetURL(string word, int page)
         {
             byte[] data = Encoding.UTF8.GetBytes(word);
             string name = "";
@@ -42,20 +42,19 @@ namespace MagnetX.Searcher.WebSearcher
         protected Regex regMagnet = new Regex("<a href=\"(magnet[^\"]+)\"", RegexOptions.Compiled);
         protected Regex regSize = new Regex("文件大小[\\D]+\\>\\s*(\\d[^\\<]+)", RegexOptions.Compiled);
 
-        protected override Result ReadPart(string part)
+        protected override async Task<Result> ReadPart(string part)
         {
             Result r = new Result() { From = this.Name };
             try
             {
-                if (!regName.IsMatch(part)) return null;
-                if (!regMagnet.IsMatch(part)) return null;
-                if (!regSize.IsMatch(part)) return null;
-                r.Name = regName.Match(part).Groups[1].Value;
-                r.Name = Uri.UnescapeDataString(r.Name);
+                var matchName = regName.Match(part);
+                var matchMagnet = regMagnet.Match(part);
+                var matchSize = regSize.Match(part);
+                if (!matchName.Success || !matchMagnet.Success || !matchSize.Success) return null;
+
+                r.Name = Uri.UnescapeDataString(regName.Match(part).Groups[1].Value);
                 r.Magnet = regMagnet.Match(part).Groups[1].Value;
                 r.Size = regSize.Match(part).Groups[1].Value;
-
-                r.From = this.Name;
                 return r;
             }
             catch
