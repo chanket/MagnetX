@@ -5,90 +5,83 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.IO.Compression;
 
 namespace MagnetX.Searcher.HistorySearcher
 {
     static class Utils
     {
-        private static string File { get; } = @"History.accdb";
+        private static string History { get; } = "History.bin";
+        private static Encoding Encoding { get; } = Encoding.UTF8;
+        public static FileStream HistoryFileStreamRead { get { return new FileStream(History, FileMode.Open, FileAccess.Read, FileShare.ReadWrite); } }
+        public static FileStream HistoryFileStreamWrite { get { return new FileStream(History, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); } }
+        
+        public static void Init()
+        {
+            FileInfo fi = new FileInfo(History);
+            if (!fi.Exists)
+            {
+                fi.Create().Close();
+            }
+        }
 
-        private static string ConnectString { get; } = @"Provider = Microsoft.Ace.OLEDB.12.0; Data Source = " + File + "; Jet OLEDB:Database Password=MAGNETX";
-
-        public static FileInfo DatabaseFile { get { return new FileInfo(File); } }
-
-        public static bool Init()
+        public static async Task<Result> ReadResult(Stream stream)
         {
             try
             {
-                //Delete Existed
-                if (DatabaseFile.Exists) DatabaseFile.Delete();
+                int size = (stream.ReadByte() << 24)
+                    + (stream.ReadByte() << 16)
+                    + (stream.ReadByte() << 8)
+                    + stream.ReadByte();
+                byte[] buffer = new byte[size];
 
-                //Release New
-                System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-                string name = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Namespace + "." + File;
-                using (Stream inStream = asm.GetManifestResourceStream(name))
-                using  (FileStream outStream = DatabaseFile.OpenWrite())
+                await stream.ReadAsync(buffer, 0, size).ConfigureAwait(false);
+                using (BinaryReader br = new BinaryReader(new DeflateStream(new MemoryStream(buffer), CompressionMode.Decompress), Encoding))
                 {
-                    byte[] buffer = new byte[1024];
-                    int bytesRead = inStream.Read(buffer, 0, buffer.Length);
-                    while (bytesRead != 0)
-                    {
-                        outStream.Write(buffer, 0, bytesRead);
-                        bytesRead = inStream.Read(buffer, 0, buffer.Length);
-                    }
+                    Result result = new Result();
+                    result.Name = br.ReadString();
+                    result.Magnet = br.ReadString();
+                    result.Size = br.ReadString();
+
+                    return result;
                 }
             }
-            catch
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static async Task<bool> WriteResult(Stream stream, Result result)
+        {
+            try
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    using (BinaryWriter bw = new BinaryWriter(new DeflateStream(ms, CompressionMode.Compress, true), Encoding))
+                    {
+                        bw.Write(result.Name);
+                        bw.Write(result.Magnet);
+                        bw.Write(result.Size);
+                    }
+
+                    ms.Seek(0, SeekOrigin.Begin);
+                    int size = (int)ms.Length;
+                    await stream.WriteAsync(new byte[] {
+                        (byte)(size >> 24),
+                        (byte)(size >> 16),
+                        (byte)(size >> 8),
+                        (byte)(size),
+                    }, 0, 4).ConfigureAwait(false);
+                    await ms.CopyToAsync(stream).ConfigureAwait(false);
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
             {
                 return false;
             }
-
-            return true;
-        }
-
-        public static OleDbConnection CreateConnection()
-        {
-            OleDbConnection conn = new OleDbConnection(ConnectString);
-            return conn;
-        }
-
-        public static OleDbCommand BuildSearch(OleDbConnection conn, string[] words)
-        {
-            string baseCmd = @"SELECT `ID`,`Promote`,`Size` FROM `Data`";
-
-            for (int i = 0; i < words.Length; i++)
-            {
-                if (i == 0) baseCmd += " WHERE `Promote` LIKE ?";
-                else baseCmd += " AND `Promote` LIKE ?";
-            }
-
-            OleDbCommand cmd = new OleDbCommand(baseCmd);
-            for (int i = 0; i < words.Length; i++)
-            {
-                cmd.Parameters.AddWithValue("?", "%" + words[i] + "%");
-            }
-
-            cmd.Connection = conn;
-            return cmd;
-        }
-
-        public static OleDbCommand BuildInsert(OleDbConnection conn, Result result)
-        {
-            OleDbCommand cmd = new OleDbCommand(@"INSERT INTO `Data` (`ID`, `Promote`, `Size`) VALUES (?, ?, ?)");
-            cmd.Parameters.AddWithValue("?", result.Magnet.Substring(20, 40));
-            cmd.Parameters.AddWithValue("?", result.Name);
-            cmd.Parameters.AddWithValue("?", result.Size);
-
-            cmd.Connection = conn;
-            return cmd;
-        }
-
-        public static OleDbCommand BuildDelete(OleDbConnection conn)
-        {
-            OleDbCommand cmd = new OleDbCommand(@"DELETE FROM `Data`");
-
-            cmd.Connection = conn;
-            return cmd;
         }
     }
 }

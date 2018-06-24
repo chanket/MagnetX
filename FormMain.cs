@@ -206,21 +206,6 @@ namespace MagnetX
             Utils.RecordHistory = !Utils.RecordHistory;
         }
 
-        private async void 清空记录ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("你确定要这样重置你所有的搜索记录吗？", "确认", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                if (await Utils.HistoryRecorder.ClearAsync())
-                {
-                    MessageBox.Show("清理完成。", "成功");
-                }
-                else
-                {
-                    MessageBox.Show("清理没有成功。", "失败");
-                }
-            }
-        }
-
         private void menuStrip1_MenuActivate(object sender, EventArgs e)
         {
             保存纪录ToolStripMenuItem.Checked = Utils.RecordHistory;

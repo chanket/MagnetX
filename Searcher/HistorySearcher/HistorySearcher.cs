@@ -6,11 +6,22 @@ using System.Threading.Tasks;
 using System.Data.OleDb;
 using System.Threading;
 using System.Windows.Forms;
+using System.IO;
+using System.IO.Compression;
 
 namespace MagnetX.Searcher.HistorySearcher
 {
     class HistorySearcher : Searcher
     {
+        protected bool Matches(string[] words, string name)
+        {
+            foreach(string word in words)
+            {
+                if (name.IndexOf(word) == -1) return false;
+            }
+            return true;
+        }
+
         public override string Name
         {
             get
@@ -22,36 +33,38 @@ namespace MagnetX.Searcher.HistorySearcher
         public override async void SearchAsync(string word)
         {
             string[] words = word.Split(' ', '\t');
+            List<Result> list = new List<Result>();
             try
             {
-                using (var conn = Utils.CreateConnection())
+                using (BufferedStream fs = new BufferedStream(Utils.HistoryFileStreamRead))
                 {
-                    await conn.OpenAsync().ConfigureAwait(false);
-                    var cmd = Utils.BuildSearch(conn, words);
-                    var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
-
-                    List<Result> results = new List<Result>();
-                    while (await reader.ReadAsync().ConfigureAwait(false))
+                    while (true)
                     {
-                        string magnet = await reader.GetFieldValueAsync<string>(0).ConfigureAwait(false);
-                        string promote = await reader.GetFieldValueAsync<string>(1).ConfigureAwait(false);
-                        string size = await reader.GetFieldValueAsync<string>(2).ConfigureAwait(false);
-                        results.Add(new Result()
-                        {
-                            Magnet = "magnet:?xt=urn:btih:" + magnet,
-                            Name = promote,
-                            From = Name,
-                            Size = size,
-                        });
+                        Result result = await Utils.ReadResult(fs).ConfigureAwait(false);
+                        if (result == null) break;
 
-                        if (results.Count == 100)
+                        result.From = Name;
+                        if (Matches(words,result.Name))
+                        {
+                            list.Add(result);
+                        }
+                        if (list.Count == 100)
                         {
                             if (OnResults == null) break;
-                            else if (!OnResults.Invoke(this, results)) break;
-                            results.Clear();
+                            if (!OnResults.Invoke(this, list)) break;
+                            list.Clear();
                         }
                     }
-                    if (results.Count != 0) OnResults?.Invoke(this, results);
+                }
+            }
+            catch { }
+
+            try
+            {
+                if (list.Count != 0)
+                {
+                    if (OnResults != null) OnResults.Invoke(this, list);
+                    list.Clear();
                 }
             }
             catch { }
@@ -59,18 +72,7 @@ namespace MagnetX.Searcher.HistorySearcher
 
         public override async Task<TestResults> TestAsync()
         {
-            using (var conn = Utils.CreateConnection())
-            {
-                try
-                {
-                    await conn.OpenAsync();
-                    return TestResults.OK;
-                }
-                catch (Exception ex)
-                {
-                    return TestResults.ServerError;
-                }
-            }
+            return TestResults.OK;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace MagnetX
     {
         private static Settings Settings { get; set; }
 
-        public static HistoryRecorder HistoryRecorder { get; } = new HistoryRecorder();
+        public static HistoryRecorder HistoryRecorder { get; set; } 
 
         public static IEnumerable<Searcher.Searcher> GetAllSearchers()
         {
@@ -35,10 +35,9 @@ namespace MagnetX
 
         public static void Init()
         {
-            if (!Searcher.HistorySearcher.Utils.DatabaseFile.Exists)
-            {
-                Searcher.HistorySearcher.Utils.Init();
-            }
+            Searcher.HistorySearcher.Utils.Init();
+            HistoryRecorder = new HistoryRecorder();
+            HistoryRecorder.Migrate0();
 
             Settings = Settings.Load();
         }

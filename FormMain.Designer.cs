@@ -40,7 +40,6 @@
             this.数据源ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.保存纪录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.清空记录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewResults = new MagnetX.List.ListView();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -111,8 +110,7 @@
             this.功能ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.数据源ToolStripMenuItem,
             this.toolStripSeparator2,
-            this.保存纪录ToolStripMenuItem,
-            this.清空记录ToolStripMenuItem});
+            this.保存纪录ToolStripMenuItem});
             this.功能ToolStripMenuItem.Name = "功能ToolStripMenuItem";
             this.功能ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.功能ToolStripMenuItem.Text = "菜单";
@@ -120,30 +118,23 @@
             // 数据源ToolStripMenuItem
             // 
             this.数据源ToolStripMenuItem.Name = "数据源ToolStripMenuItem";
-            this.数据源ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.数据源ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.数据源ToolStripMenuItem.Text = "数据源";
             this.数据源ToolStripMenuItem.Click += new System.EventHandler(this.数据源ToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // 保存纪录ToolStripMenuItem
             // 
             this.保存纪录ToolStripMenuItem.Checked = true;
             this.保存纪录ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.保存纪录ToolStripMenuItem.Name = "保存纪录ToolStripMenuItem";
-            this.保存纪录ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.保存纪录ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.保存纪录ToolStripMenuItem.Text = "保存记录";
             this.保存纪录ToolStripMenuItem.Click += new System.EventHandler(this.保存纪录ToolStripMenuItem_Click);
-            // 
-            // 清空记录ToolStripMenuItem
-            // 
-            this.清空记录ToolStripMenuItem.Name = "清空记录ToolStripMenuItem";
-            this.清空记录ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.清空记录ToolStripMenuItem.Text = "清空记录";
-            this.清空记录ToolStripMenuItem.Click += new System.EventHandler(this.清空记录ToolStripMenuItem_Click);
             // 
             // listViewResults
             // 
@@ -216,7 +207,6 @@
         private System.Windows.Forms.ColumnHeader columnHeaderFrom;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem 保存纪录ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 清空记录ToolStripMenuItem;
     }
 }
 
