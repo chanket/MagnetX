@@ -49,39 +49,43 @@ namespace MagnetX.Searcher.WebSearcher
                     List<Result> list = new List<Result>();
                     for (int ntry = 0; ntry < 4; ntry++)
                     {
-                        HttpClient hc = CreateHttpClient();
-                        hc.Timeout = TimeSpan.FromMilliseconds(5000 + ntry * 2000);
-                        try
+                        using (HttpClient hc = CreateHttpClient())
                         {
-                            var resp = await hc.GetAsync(url).ConfigureAwait(false);
-                            if (resp.StatusCode == System.Net.HttpStatusCode.OK)
+                            hc.Timeout = TimeSpan.FromMilliseconds(5000 + ntry * 2000);
+
+                            try
                             {
-                                string data = await hc.GetStringAsync(url).ConfigureAwait(false);
-                                foreach (string part in PrepareParts(data))
+                                var resp = await hc.GetAsync(url).ConfigureAwait(false);
+                                if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                                 {
-                                    var result = await ReadPart(part).ConfigureAwait(false);
-                                    if (result != null)
+                                    string data = await hc.GetStringAsync(url).ConfigureAwait(false);
+                                    foreach (string part in PrepareParts(data))
                                     {
-                                        result.Name = HandleCfEmail(result.Name);
-                                        list.Add(result);
+                                        var result = await ReadPart(part).ConfigureAwait(false);
+                                        if (result != null)
+                                        {
+                                            result.Name = HandleCfEmail(result.Name);
+                                            list.Add(result);
+                                        }
                                     }
+                                    break;
                                 }
-                                break;
+                                else
+                                {
+                                    await Task.Delay(250).ConfigureAwait(false);
+                                }
                             }
-                            else
+                            catch (TaskCanceledException)
                             {
                                 await Task.Delay(250).ConfigureAwait(false);
                             }
-                        }
-                        catch (TaskCanceledException)
-                        {
-                            await Task.Delay(250).ConfigureAwait(false);
                         }
                     }
 
                     if (list.Count == 0) break;
                     if (OnResults == null) break;
                     if (!OnResults.Invoke(this, list)) break;
+                    list.Clear();
                 }
                 catch (Exception ex)
                 {
@@ -97,39 +101,36 @@ namespace MagnetX.Searcher.WebSearcher
         public override async Task<TestResults> TestAsync()
         {
             string url = await GetURL("电影", 1).ConfigureAwait(false);
-            HttpClient hc = CreateHttpClient();
-            hc.Timeout = TimeSpan.FromMilliseconds(10000);
-            try
+            using (HttpClient hc = CreateHttpClient())
             {
-                var resp = await hc.GetAsync(url).ConfigureAwait(false);
-                if (resp.StatusCode == System.Net.HttpStatusCode.OK)
+                hc.Timeout = TimeSpan.FromMilliseconds(10000);
+                try
                 {
-                    int count = 0;
-                    string data = await hc.GetStringAsync(url).ConfigureAwait(false);
-                    foreach (string part in PrepareParts(data))
+                    var resp = await hc.GetAsync(url).ConfigureAwait(false);
+                    if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        var result = await ReadPart(part).ConfigureAwait(false);
-                        if (result != null)
+                        string data = await hc.GetStringAsync(url).ConfigureAwait(false);
+                        foreach (string part in PrepareParts(data))
                         {
-                            count++;
+                            var result = await ReadPart(part).ConfigureAwait(false);
+                            if (result != null) return TestResults.OK;
                         }
-                    }
 
-                    if (count != 0) return TestResults.OK;
-                    else return TestResults.FormatError;
+                        return TestResults.FormatError;
+                    }
+                    else
+                    {
+                        return TestResults.ServerError;
+                    }
                 }
-                else
+                catch (TaskCanceledException)
                 {
-                    return TestResults.ServerError;
+                    return TestResults.Timeout;
                 }
-            }
-            catch (TaskCanceledException)
-            {
-                return TestResults.Timeout;
-            }
-            catch (Exception)
-            {
-                return TestResults.UnknownError;
+                catch (Exception)
+                {
+                    return TestResults.UnknownError;
+                }
             }
         }
 
