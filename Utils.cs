@@ -37,7 +37,6 @@ namespace MagnetX
         {
             Searcher.HistorySearcher.Utils.Init();
             HistoryRecorder = new HistoryRecorder();
-            HistoryRecorder.Migrate0();
 
             Settings = Settings.Load();
         }

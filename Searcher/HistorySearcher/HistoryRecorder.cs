@@ -57,39 +57,5 @@ namespace MagnetX.Searcher.HistorySearcher
             }
             Lock.Release();
         }
-
-        public async void Migrate0()
-        {
-            await Lock.WaitAsync().ConfigureAwait(false);
-            Lock.Release();
-
-            int count = 0;
-            try
-            {
-                using (var conn = UtilsOld0.CreateConnection())
-                {
-                    await conn.OpenAsync().ConfigureAwait(false);
-                    var cmd = UtilsOld0.BuildSearch(conn, new string[] { });
-                    var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
-
-                    while (await reader.ReadAsync().ConfigureAwait(false))
-                    {
-                        string magnet = await reader.GetFieldValueAsync<string>(0).ConfigureAwait(false);
-                        string promote = await reader.GetFieldValueAsync<string>(1).ConfigureAwait(false);
-                        string size = await reader.GetFieldValueAsync<string>(2).ConfigureAwait(false);
-                        await Insert(new Result[]{ new Result() {
-                        Magnet = "magnet:?xt=urn:btih:" + magnet,
-                        Name = promote,
-                        Size = size,
-                    } }).ConfigureAwait(false);
-
-                        count++;
-                    }
-                }
-
-                UtilsOld0.DatabaseFile.Delete();
-            }
-            catch { }
-        }
     }
 }
