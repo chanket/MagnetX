@@ -19,6 +19,7 @@ namespace MagnetX
         {
             InitializeComponent();
             this.MinimumSize = new Size(300, 200);
+            listViewResults.ListViewItemSorter = null;
         }
 
         private void FormMain_Load(object sender, EventArgs e)
