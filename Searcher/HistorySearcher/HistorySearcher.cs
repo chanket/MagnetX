@@ -14,6 +14,7 @@ namespace MagnetX.Searcher.HistorySearcher
     /// <summary>
     /// 历史记录的搜索类。
     /// </summary>
+    [SearcherEnabled]
     class HistorySearcher : Searcher
     {
         protected bool Matches(string[] words, string name)

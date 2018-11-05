@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-	internal class CilibaWebSearcher : WebSearcher
+    [SearcherEnabled]
+    class CilibaWebSearcher : WebSearcher
 	{
 		protected Regex regName = new Regex("target=\"_blank\">(.+?)<", RegexOptions.Compiled);
 

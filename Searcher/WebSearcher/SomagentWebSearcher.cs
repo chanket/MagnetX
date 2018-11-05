@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-	internal class SomagnetWebSearcher : WebSearcher
+    [SearcherEnabled]
+    class SomagnetWebSearcher : WebSearcher
     {
         public override string Name { get; } = "somagnet.com";
 

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-	internal class BtsoWebSearcher : WebSearcher
+    [SearcherEnabled]
+    class BtsoWebSearcher : WebSearcher
 	{
 		protected Regex regName = new Regex("title=\"(.+?)\"", RegexOptions.Compiled);
 

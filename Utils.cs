@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MagnetX.Searcher.WebSearcher;
+using MagnetX.Searcher;
 using MagnetX.Searcher.HistorySearcher;
+using System.Reflection;
 
 namespace MagnetX
 {
@@ -18,23 +19,24 @@ namespace MagnetX
     {
         public static HistoryRecorder HistoryRecorder { get; } = new HistoryRecorder();
 
+        /// <summary>
+        /// 获取所有可用的<see cref="Searcher.Searcher"/>的实现类的实例。
+        /// 任何一个类需要满足下列所有条件：具有<see cref="SearcherEnabledAttribute"/>属性；具有无参数构造函数。
+        /// </summary>
         public static IEnumerable<Searcher.Searcher> GetAllSearchers()
         {
-            yield return new HistorySearcher();
-            yield return new Bt177WebSearcher();
-            yield return new CilisharexWebSearcher();
-            yield return new BtmuleWebSearcher();
-            yield return new ZhongzisoWebSearcher();
-            yield return new CnbtkittyWebSearcher();
-            yield return new BtcatWebSearcher();
-            yield return new IdopeWebSearcher();
-            yield return new BaocaibtWebSearcher();
-            yield return new CilibaWebSearcher();
-            yield return new BtsoWebSearcher();
-            yield return new DhtseakWebSearcher();
-            yield return new SomagnetWebSearcher();
-            yield return new WtsqyyWebSearcher();
-            yield return new CililianxWebSearcher();
+            foreach (Type t in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                SearcherEnabledAttribute attr = t.GetCustomAttribute(typeof(SearcherEnabledAttribute)) as SearcherEnabledAttribute;
+                if (attr != null && t.IsSubclassOf(typeof(Searcher.Searcher)))
+                {
+                    ConstructorInfo constructor = t.GetConstructor(new Type[0]);
+                    if (constructor != null)
+                    {
+                        yield return constructor.Invoke(null) as Searcher.Searcher;
+                    }
+                }
+            }
         }
 
         #region Settings

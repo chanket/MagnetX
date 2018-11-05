@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-	internal class CnbtkittyWebSearcher : WebSearcher
+    [SearcherEnabled]
+    class CnbtkittyWebSearcher : WebSearcher
 	{
 		protected Regex regName = new Regex("target=\"_blank\">(.+?)<\\/a>", RegexOptions.Compiled);
 

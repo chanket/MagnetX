@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
+    [SearcherEnabled]
     class CilisharexWebSearcher : WebSearcher
     {
         public override string Name

@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-	internal class IdopeWebSearcher : WebSearcher
+    [SearcherEnabled]
+    class IdopeWebSearcher : WebSearcher
 	{
 		protected Regex regName = new Regex("<div id=\"hidename.+?>(.+?)<", RegexOptions.Compiled);
 

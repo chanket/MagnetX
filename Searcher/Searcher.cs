@@ -23,6 +23,12 @@ namespace MagnetX.Searcher
         UnknownError,
     }
 
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class SearcherEnabledAttribute : System.Attribute
+    {
+
+    }
+
     abstract class Searcher
     {
         public delegate bool SearcherResultsDelegate(Searcher sender, List<Result> results);

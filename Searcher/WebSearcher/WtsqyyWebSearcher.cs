@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-	internal class WtsqyyWebSearcher : WebSearcher
+    [SearcherEnabled]
+    class WtsqyyWebSearcher : WebSearcher
 	{
         public override string Name { get; } = "wtsqyy.com";
 

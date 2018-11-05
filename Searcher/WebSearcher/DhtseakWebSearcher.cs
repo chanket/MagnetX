@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
+    [SearcherEnabled]
     class DhtseakWebSearcher : WebSearcher
     {
         public override string Name

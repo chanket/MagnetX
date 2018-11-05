@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-	internal class BaocaibtWebSearcher : WebSearcher
+    [SearcherEnabled]
+    class BaocaibtWebSearcher : WebSearcher
 	{
 		public override string Name => "baocaibt.org";
 
