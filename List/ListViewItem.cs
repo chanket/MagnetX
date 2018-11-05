@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace MagnetX.List
 {
+    /// <summary>
+    /// 表示<see cref="MagnetX.List.ListView"/>中的元素，描述一项搜索结果。
+    /// </summary>
     class ListViewItem : System.Windows.Forms.ListViewItem
     {
         public Result Result { get; }
