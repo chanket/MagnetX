@@ -10,9 +10,9 @@ namespace MagnetX
 {
     static class Utils
     {
-        private static Settings Settings { get; set; }
+        private static Settings Settings { get; } = Settings.Load();
 
-        public static HistoryRecorder HistoryRecorder { get; set; } 
+        public static HistoryRecorder HistoryRecorder { get; } = new HistoryRecorder();
 
         public static IEnumerable<Searcher.Searcher> GetAllSearchers()
         {
@@ -31,14 +31,6 @@ namespace MagnetX
             yield return new SomagnetWebSearcher();
             yield return new WtsqyyWebSearcher();
             yield return new CililianxWebSearcher();
-        }
-
-        public static void Init()
-        {
-            Searcher.HistorySearcher.Utils.Init();
-            HistoryRecorder = new HistoryRecorder();
-
-            Settings = Settings.Load();
         }
 
         public static bool GetSearcherEnabled(Searcher.Searcher s)

@@ -11,6 +11,9 @@ using System.IO.Compression;
 
 namespace MagnetX.Searcher.HistorySearcher
 {
+    /// <summary>
+    /// 历史记录的搜索类。
+    /// </summary>
     class HistorySearcher : Searcher
     {
         protected bool Matches(string[] words, string name)
@@ -36,7 +39,7 @@ namespace MagnetX.Searcher.HistorySearcher
             List<Result> list = new List<Result>();
             try
             {
-                using (BufferedStream fs = new BufferedStream(Utils.HistoryFileStreamRead))
+                using (BufferedStream fs = new BufferedStream(Utils.HistoryStreamForRead))
                 {
                     while (true)
                     {

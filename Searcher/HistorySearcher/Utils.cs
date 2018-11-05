@@ -9,21 +9,15 @@ using System.IO.Compression;
 
 namespace MagnetX.Searcher.HistorySearcher
 {
+    /// <summary>
+    /// 历史纪录的工具类。
+    /// </summary>
     static class Utils
     {
         private static string History { get; } = "History.bin";
         private static Encoding Encoding { get; } = Encoding.UTF8;
-        public static FileStream HistoryFileStreamRead { get { return new FileStream(History, FileMode.Open, FileAccess.Read, FileShare.ReadWrite); } }
-        public static FileStream HistoryFileStreamWrite { get { return new FileStream(History, FileMode.Open, FileAccess.ReadWrite, FileShare.Read); } }
-        
-        public static void Init()
-        {
-            FileInfo fi = new FileInfo(History);
-            if (!fi.Exists)
-            {
-                fi.Create().Close();
-            }
-        }
+        public static FileStream HistoryStreamForRead { get { return new FileStream(History, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite); } }
+        public static FileStream HistoryStreamForWrite { get { return new FileStream(History, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read); } }
 
         public static async Task<Result> ReadResult(Stream stream)
         {
