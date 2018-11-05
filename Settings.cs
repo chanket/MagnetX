@@ -4,6 +4,9 @@ using System.Runtime.Serialization.Formatters.Soap;
 
 namespace MagnetX
 {
+    /// <summary>
+    /// 记录偏好设置的类。
+    /// </summary>
 	[Serializable]
 	internal class Settings
 	{

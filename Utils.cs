@@ -8,10 +8,14 @@ using MagnetX.Searcher.HistorySearcher;
 
 namespace MagnetX
 {
+    /// <summary>
+    /// 全局工具类。
+    /// 提供<see cref="Searcher.Searcher"/>实例的获取；
+    /// 提供<see cref="Searcher.HistorySearcher.HistoryRecorder"/>单例的获取；
+    /// 封装了对<see cref="MagnetX.Settings"/>类数据的访问。
+    /// </summary>
     static class Utils
     {
-        private static Settings Settings { get; } = Settings.Load();
-
         public static HistoryRecorder HistoryRecorder { get; } = new HistoryRecorder();
 
         public static IEnumerable<Searcher.Searcher> GetAllSearchers()
@@ -32,6 +36,10 @@ namespace MagnetX
             yield return new WtsqyyWebSearcher();
             yield return new CililianxWebSearcher();
         }
+
+        #region Settings
+
+        private static Settings Settings { get; } = Settings.Load();
 
         public static bool GetSearcherEnabled(Searcher.Searcher s)
         {
@@ -86,5 +94,7 @@ namespace MagnetX
                 Settings.Save(Settings);
             }
         }
+
+        #endregion
     }
 }

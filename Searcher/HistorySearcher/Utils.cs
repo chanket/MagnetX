@@ -11,6 +11,7 @@ namespace MagnetX.Searcher.HistorySearcher
 {
     /// <summary>
     /// 历史纪录的工具类。
+    /// 提供了对历史文件流的操作。
     /// </summary>
     static class Utils
     {
