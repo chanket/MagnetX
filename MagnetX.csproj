@@ -48,9 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="List\Comparers\NameComparer.cs" />
-    <Compile Include="List\Comparers\SizeComparer.cs" />
-    <Compile Include="List\Comparers\FromComparer.cs" />
     <Compile Include="List\ListView.cs">
       <SubType>Component</SubType>
     </Compile>

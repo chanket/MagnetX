@@ -41,6 +41,7 @@ namespace MagnetX
 
 
         #region ListView
+
         private void listViewResults_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -69,50 +70,34 @@ namespace MagnetX
 
         private void listViewResults_ColumnClick(object sender, ColumnClickEventArgs e)
         {
+            bool sortDesc = listViewResults.ListViewSortType.HasFlag(List.ListView.ListViewSortTypes.Asc);
+            var sortType = sortDesc ? List.ListView.ListViewSortTypes.Desc : List.ListView.ListViewSortTypes.Asc;
             switch (e.Column)
             {
                 case 0:
                     {
-                        if (listViewResults.ListViewItemSorter is List.Comparers.NameComparer)
-                        {
-                            listViewResults.ListViewItemSorter = new List.Comparers.NameComparer(!(listViewResults.ListViewItemSorter as List.Comparers.NameComparer).Asc);
-                        }
-                        else
-                        {
-                            listViewResults.ListViewItemSorter = new List.Comparers.NameComparer(true);
-                        }
-
-                        listViewResults.Sort();
+                        sortType |= MagnetX.List.ListView.ListViewSortTypes.Name;
+                        listViewResults.ListViewSortType = sortType;
                     }
                     break;
 
                 case 1:
                     {
-                        if (listViewResults.ListViewItemSorter is List.Comparers.SizeComparer)
-                        {
-                            listViewResults.ListViewItemSorter = new List.Comparers.SizeComparer(!(listViewResults.ListViewItemSorter as List.Comparers.SizeComparer).Asc);
-                        }
-                        else
-                        {
-                            listViewResults.ListViewItemSorter = new List.Comparers.SizeComparer(true);
-                        }
-
-                        listViewResults.Sort();
+                        sortType |= MagnetX.List.ListView.ListViewSortTypes.Size;
+                        listViewResults.ListViewSortType = sortType;
                     }
                     break;
 
                 case 2:
                     {
-                        if (listViewResults.ListViewItemSorter is List.Comparers.FromComparer)
-                        {
-                            listViewResults.ListViewItemSorter = new List.Comparers.FromComparer(!(listViewResults.ListViewItemSorter as List.Comparers.FromComparer).Asc);
-                        }
-                        else
-                        {
-                            listViewResults.ListViewItemSorter = new List.Comparers.FromComparer(true);
-                        }
+                        sortType |= MagnetX.List.ListView.ListViewSortTypes.From;
+                        listViewResults.ListViewSortType = sortType;
+                    }
+                    break;
 
-                        listViewResults.Sort();
+                default:
+                    {
+                        listViewResults.ListViewSortType = MagnetX.List.ListView.ListViewSortTypes.None;
                     }
                     break;
             }
@@ -181,7 +166,7 @@ namespace MagnetX
                     listViewResults.BeginUpdate();
                     foreach (Result r in results)
                     {
-                        listViewResults.UniqueItemAdd(new List.ListViewItem(r), r.Magnet.ToLower());
+                        listViewResults.UniqueItemAdd(new List.ListViewItem(r));
                     }
                     listViewResults.EndUpdate();
 

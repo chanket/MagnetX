@@ -22,6 +22,7 @@ namespace MagnetX.List
             UpdateStyles();
         }
 
+        #region UniqueItem
         /// <summary>
         /// 清空所有元素，并清空判断唯一元素的哈希表。
         /// </summary>
@@ -51,5 +52,139 @@ namespace MagnetX.List
         }
 
         protected HashSet<string> Hash { get; set; } = new HashSet<string>();
+        #endregion
+
+        #region Sort
+        /// <summary>
+        /// 描述<see cref="ListView"/>的排序方法。
+        /// </summary>
+        public enum ListViewSortTypes
+        {
+            /// <summary>
+            /// 不排序。
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// 资源名升序。
+            /// </summary>
+            NameAsc = Name | Asc,
+
+            /// <summary>
+            /// 资源名降序。
+            /// </summary>
+            NameDesc = Name | Desc,
+
+            /// <summary>
+            /// 大小升序。
+            /// </summary>
+            SizeAsc = Size | Asc,
+
+            /// <summary>
+            /// 大小降序。
+            /// </summary>
+            SizeDesc = Size | Desc,
+
+            /// <summary>
+            /// 源升序。
+            /// </summary>
+            FromAsc = From | Asc,
+
+            /// <summary>
+            /// 源降序。
+            /// </summary>
+            FromDesc = From | Desc,
+
+            Asc = 1,
+            Desc = 2,
+            Name = 4,
+            Size = 8,
+            From = 16,
+        }
+
+        private ListViewSortTypes listViewSortType = ListViewSortTypes.None;
+
+        /// <summary>
+        /// 获取或设置<see cref="ListView"/>的排序方法。
+        /// </summary>
+        public ListViewSortTypes ListViewSortType
+        {
+            get
+            {
+                return listViewSortType;
+            }
+            set
+            {
+                listViewSortType = value;
+
+                if (listViewSortType.HasFlag(ListViewSortTypes.Name))
+                {
+                    StringComparer stringComparer = StringComparer.CurrentCulture;
+                    if (listViewSortType.HasFlag(ListViewSortTypes.Asc))
+                    {
+                        base.ListViewItemSorter = Comparer<ListViewItem>.Create(new Comparison<ListViewItem>((ListViewItem a, ListViewItem b) => {
+                            return stringComparer.Compare(a.Result.Name, b.Result.Name);
+                        }));
+                    }
+                    else if (listViewSortType.HasFlag(ListViewSortTypes.Desc))
+                    {
+                        base.ListViewItemSorter = Comparer<ListViewItem>.Create(new Comparison<ListViewItem>((ListViewItem a, ListViewItem b) => {
+                            return -stringComparer.Compare(a.Result.Name, b.Result.Name);
+                        }));
+                    }
+                    else
+                    {
+                        base.ListViewItemSorter = null;
+                    }
+                }
+                else if (listViewSortType.HasFlag(ListViewSortTypes.Size))
+                {
+                    StringComparer stringComparer = StringComparer.CurrentCulture;
+                    if (listViewSortType.HasFlag(ListViewSortTypes.Asc))
+                    {
+                        base.ListViewItemSorter = Comparer<ListViewItem>.Create(new Comparison<ListViewItem>((ListViewItem a, ListViewItem b) => {
+                            return stringComparer.Compare(a.Result.Size, b.Result.Size);
+                        }));
+                    }
+                    else if (listViewSortType.HasFlag(ListViewSortTypes.Desc))
+                    {
+                        base.ListViewItemSorter = Comparer<ListViewItem>.Create(new Comparison<ListViewItem>((ListViewItem a, ListViewItem b) => {
+                            return -stringComparer.Compare(a.Result.Size, b.Result.Size);
+                        }));
+                    }
+                    else
+                    {
+                        base.ListViewItemSorter = null;
+                    }
+                }
+                else if (listViewSortType.HasFlag(ListViewSortTypes.From))
+                {
+                    StringComparer stringComparer = StringComparer.CurrentCulture;
+                    if (listViewSortType.HasFlag(ListViewSortTypes.Asc))
+                    {
+                        base.ListViewItemSorter = Comparer<ListViewItem>.Create(new Comparison<ListViewItem>((ListViewItem a, ListViewItem b) => {
+                            return stringComparer.Compare(a.Result.From, b.Result.From);
+                        }));
+                    }
+                    else if (listViewSortType.HasFlag(ListViewSortTypes.Desc))
+                    {
+                        base.ListViewItemSorter = Comparer<ListViewItem>.Create(new Comparison<ListViewItem>((ListViewItem a, ListViewItem b) => {
+                            return -stringComparer.Compare(a.Result.From, b.Result.From);
+                        }));
+                    }
+                    else
+                    {
+                        base.ListViewItemSorter = null;
+                    }
+                }
+                else
+                {
+                    base.ListViewItemSorter = null;
+                }
+
+                this.Sort();
+            }
+        }
+        #endregion
     }
 }
