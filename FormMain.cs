@@ -196,6 +196,11 @@ namespace MagnetX
         {
             保存纪录ToolStripMenuItem.Checked = Utils.RecordHistory;
         }
+
+        private void githubToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/chanket/MagnetX/releases");
+        }
         #endregion
     }
 }

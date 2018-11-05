@@ -38,6 +38,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.功能ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.数据源ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.githubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.保存纪录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewResults = new MagnetX.List.ListView();
@@ -109,6 +110,7 @@
             // 
             this.功能ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.数据源ToolStripMenuItem,
+            this.githubToolStripMenuItem,
             this.toolStripSeparator2,
             this.保存纪录ToolStripMenuItem});
             this.功能ToolStripMenuItem.Name = "功能ToolStripMenuItem";
@@ -121,6 +123,13 @@
             this.数据源ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.数据源ToolStripMenuItem.Text = "数据源";
             this.数据源ToolStripMenuItem.Click += new System.EventHandler(this.数据源ToolStripMenuItem_Click);
+            // 
+            // githubToolStripMenuItem
+            // 
+            this.githubToolStripMenuItem.Name = "githubToolStripMenuItem";
+            this.githubToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.githubToolStripMenuItem.Text = "检查更新";
+            this.githubToolStripMenuItem.Click += new System.EventHandler(this.githubToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -143,6 +152,7 @@
             this.columnHeaderSize,
             this.columnHeaderFrom});
             this.listViewResults.FullRowSelect = true;
+            this.listViewResults.ListViewSortType = MagnetX.List.ListView.ListViewSortTypes.None;
             this.listViewResults.Location = new System.Drawing.Point(12, 55);
             this.listViewResults.Name = "listViewResults";
             this.listViewResults.Size = new System.Drawing.Size(861, 401);
@@ -200,10 +210,11 @@
         private System.Windows.Forms.ToolStripMenuItem 复制ToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem 资源名ToolStripMenuItem;
-        private List.ListView listViewResults;
+        private MagnetX.List.ListView listViewResults;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 功能ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 数据源ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem githubToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnHeaderFrom;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem 保存纪录ToolStripMenuItem;
