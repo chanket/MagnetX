@@ -120,28 +120,28 @@
             // 数据源ToolStripMenuItem
             // 
             this.数据源ToolStripMenuItem.Name = "数据源ToolStripMenuItem";
-            this.数据源ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.数据源ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.数据源ToolStripMenuItem.Text = "数据源";
             this.数据源ToolStripMenuItem.Click += new System.EventHandler(this.数据源ToolStripMenuItem_Click);
             // 
             // githubToolStripMenuItem
             // 
             this.githubToolStripMenuItem.Name = "githubToolStripMenuItem";
-            this.githubToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.githubToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.githubToolStripMenuItem.Text = "检查更新";
             this.githubToolStripMenuItem.Click += new System.EventHandler(this.githubToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(121, 6);
             // 
             // 保存纪录ToolStripMenuItem
             // 
             this.保存纪录ToolStripMenuItem.Checked = true;
             this.保存纪录ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.保存纪录ToolStripMenuItem.Name = "保存纪录ToolStripMenuItem";
-            this.保存纪录ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存纪录ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.保存纪录ToolStripMenuItem.Text = "保存记录";
             this.保存纪录ToolStripMenuItem.Click += new System.EventHandler(this.保存纪录ToolStripMenuItem_Click);
             // 
@@ -189,7 +189,7 @@
             this.Controls.Add(this.textBoxWord);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
-            this.Text = "MagnetX";
+            this.Text = "MagnetX(181107)";
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.SizeChanged += new System.EventHandler(this.FormMain_SizeChanged);
             this.contextMenuStripResult.ResumeLayout(false);
