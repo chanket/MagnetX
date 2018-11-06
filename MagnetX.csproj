@@ -56,6 +56,7 @@
     <Compile Include="Searcher\HistorySearcher\HistoryRecorder.cs" />
     <Compile Include="Searcher\HistorySearcher\HistorySearcher.cs" />
     <Compile Include="Searcher\WebSearcher\CililianxWebSearcher.cs" />
+    <Compile Include="Searcher\WebSearcher\Bt177WebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\WtsqyyWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\SomagentWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtcatWebSearcher.cs" />
