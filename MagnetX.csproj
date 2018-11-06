@@ -58,10 +58,7 @@
     <Compile Include="Searcher\WebSearcher\CililianxWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\WtsqyyWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\SomagentWebSearcher.cs" />
-    <Compile Include="Searcher\WebSearcher\BaocaibtWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtcatWebSearcher.cs" />
-    <Compile Include="Searcher\WebSearcher\DhtseakWebSearcher.cs" />
-    <Compile Include="Searcher\WebSearcher\BtmuleWebSearcher.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,14 +74,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Searcher\Searcher.cs" />
-    <Compile Include="Searcher\WebSearcher\Bt177WebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\BtsoWebSearcher.cs" />
-    <Compile Include="Searcher\WebSearcher\CilibaWebSearcher.cs" />
-    <Compile Include="Searcher\WebSearcher\CilisharexWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\CnbtkittyWebSearcher.cs" />
-    <Compile Include="Searcher\WebSearcher\IdopeWebSearcher.cs" />
     <Compile Include="Searcher\WebSearcher\WebSearcher.cs" />
-    <Compile Include="Searcher\WebSearcher\ZhongzisoWebSearcher.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="FormMain.resx">
