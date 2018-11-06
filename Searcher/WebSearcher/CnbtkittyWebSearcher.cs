@@ -8,16 +8,10 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
-    //[SearcherEnabled]
+    [SearcherEnabled]
     class CnbtkittyWebSearcher : WebSearcher
 	{
-		protected Regex regName = new Regex("target=\"_blank\">(.+?)<\\/a>", RegexOptions.Compiled);
-
-		protected Regex regMagnet = new Regex("'http://go.gotourls.bid/golxyb2/(.+?)\\.", RegexOptions.Compiled);
-
-		protected Regex regSize = new Regex("Size(?:.+?)<b>(.+?)<\\/b>", RegexOptions.Compiled);
-
-		public override string Name => "cnbtkitty.org";
+		public override string Name => "cnbtkitty.me";
 
 		protected override async Task<string> GetURL(string word, int page)
 		{
@@ -32,7 +26,7 @@ namespace MagnetX.Searcher.WebSearcher
 				text = text.Replace('/', '_');
 				text = text.Replace('+', '-');
 				text = text.TrimEnd('=');
-				return "http://cnbtkitty.org/search/" + text + "/" + page + "/4/0.html";
+				return "https://cnbtkitty.me/search/" + text + "/" + page + "/4/0.html";
 			}
 		}
 
@@ -46,9 +40,13 @@ namespace MagnetX.Searcher.WebSearcher
 			{
 				yield return parts[i];
 			}
-		}
+        }
 
-		protected override async Task<Result> ReadPart(string part)
+        protected Regex regName = new Regex("target=\"_blank\">(.+?)<\\/a>", RegexOptions.Compiled);
+        protected Regex regMagnet = new Regex("<a href=\".+?/t/(.+?)\\.html", RegexOptions.Compiled);
+        protected Regex regSize = new Regex("Size(?:.+?)<b>(.+?)<\\/b>", RegexOptions.Compiled);
+
+        protected override async Task<Result> ReadPart(string part)
         {
             Result result = new Result() { From = this.Name };
             try
@@ -56,14 +54,21 @@ namespace MagnetX.Searcher.WebSearcher
                 var matchName = regName.Match(part);
                 var matchMagnet = regMagnet.Match(part);
                 var matchSize = regSize.Match(part);
+
                 if (!matchName.Success || !matchMagnet.Success || !matchSize.Success) return null;
 
+                string encoded = matchMagnet.Groups[1].Value;
+                encoded = encoded.Replace('-', '+');
+                encoded = encoded.Replace('_', '/');
+                while (encoded.Length % 4 != 0) encoded += '=';
+                DeflateStream ds = new DeflateStream(new MemoryStream(Convert.FromBase64String(encoded)), CompressionMode.Decompress);
+                byte[] decoded = new byte[40];
+                int count = ds.Read(decoded, 0, 40);
+                if (count != 40) return null;
+
                 result.Name = matchName.Groups[1].Value.Replace("<b>", "").Replace("</b>", "");
-				if (result.Name.EndsWith(".torrent"))
-				{
-					result.Name = result.Name.Substring(0, result.Name.Length - ".torrent".Length);
-				}
-				result.Magnet = "magnet:?xt=urn:btih:" + matchMagnet.Groups[1].Value;
+				if (result.Name.EndsWith(".torrent")) result.Name = result.Name.Substring(0, result.Name.Length - ".torrent".Length);
+                result.Magnet = "magnet:?xt=urn:btih:" + Encoding.ASCII.GetString(decoded);
 				result.Size = matchSize.Groups[1].Value;
 				return result;
 			}
