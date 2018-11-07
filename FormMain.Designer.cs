@@ -189,7 +189,7 @@
             this.Controls.Add(this.textBoxWord);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
-            this.Text = "MagnetX(181107)";
+            this.Text = "MagnetX(20181108)";
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.SizeChanged += new System.EventHandler(this.FormMain_SizeChanged);
             this.contextMenuStripResult.ResumeLayout(false);
