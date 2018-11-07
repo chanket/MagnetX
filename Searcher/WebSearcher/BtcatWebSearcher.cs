@@ -6,56 +6,21 @@ using System.Threading.Tasks;
 namespace MagnetX.Searcher.WebSearcher
 {
     [SearcherEnabled]
-    class BtcatWebSearcher : WebSearcher
+    class BtcatWebSearcher : SimpleWebSearcher
 	{
-		protected Regex regName = new Regex("<a title=\"(.+?)\"", RegexOptions.Compiled);
-
-		protected Regex regMagnet = new Regex("/btinfo-(.+?)\\.html", RegexOptions.Compiled);
-
-		protected Regex regSize = new Regex("cpill yellow-pill.+?>(.+?)<", RegexOptions.Compiled);
-
-		public override string Name => "btcat.org";
-
-		protected override async Task<string> GetURL(string word, int page)
+		protected override async Task<string> GetURLAsync(string word, int page)
 		{
 			string text = Uri.EscapeUriString(word);
 			return "https://btcat.org/search/" + text + "/rela-" + page + ".html";
 		}
 
-		protected override IEnumerable<string> PrepareParts(string content)
-		{
-			string[] parts = content.Split(new string[1]
-			{
-				"<div class=\"item-title\">"
-			}, StringSplitOptions.None);
-			for (int i = 1; i < parts.Length; i++)
-			{
-				yield return parts[i];
-			}
-		}
+        public BtcatWebSearcher()
+            : base("btcat.org", "<div class=\"item-title\">",
+                  new Regex("<a title=\"(.+?)\"", RegexOptions.Compiled),
+                  new Regex("/btinfo-(.+?)\\.html", RegexOptions.Compiled),
+                  new Regex("cpill yellow-pill.+?>(.+?)<", RegexOptions.Compiled))
+        {
 
-		protected override async Task<Result> ReadPart(string part)
-		{
-			Result result = new Result
-			{
-				From = Name
-			};
-			try
-            {
-                var matchName = regName.Match(part);
-                var matchMagnet = regMagnet.Match(part);
-                var matchSize = regSize.Match(part);
-                if (!matchName.Success || !matchMagnet.Success || !matchSize.Success) return null;
-
-                result.Name = matchName.Groups[1].Value;
-				result.Magnet = "magnet:?xt=urn:btih:" + matchMagnet.Groups[1].Value;
-				result.Size = matchSize.Groups[1].Value;
-				return result;
-			}
-			catch
-			{
-				return null;
-			}
-		}
-	}
+        }
+    }
 }

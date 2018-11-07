@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace MagnetX.Searcher.WebSearcher
 {
+    /// <summary>
+    /// 描述来自网页的数据源的抽象类。
+    /// </summary>
     abstract class WebSearcher : Searcher
     {
         protected static Regex regCfEmail1 = new Regex("<span class=\"__cf_email__\".+?>", RegexOptions.Compiled);
@@ -29,53 +32,57 @@ namespace MagnetX.Searcher.WebSearcher
                 AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate,
             }, true);
 
-            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36");
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)");
             return httpClient;
         }
 
         /// <summary>
         /// 搜索指定关键词的实现。
-        /// 对于不同的源，不需要修改这个方法，只需要继承本类，然后实现本类的抽象方法即可。
         /// </summary>
         /// <param name="word">关键词</param>
         /// <returns></returns>
-        public override async void SearchAsync(string word)
+        public sealed override async void SearchAsync(string word)
         {
             for (int page = 1; page < 20; page++)
             {
                 try
                 {
-                    string url = await GetURL(word, page).ConfigureAwait(false);
+                    string url = await GetURLAsync(word, page).ConfigureAwait(false);
                     List<Result> list = new List<Result>();
-                    for (int ntry = 0; ntry < 4; ntry++)
+                    for (int ntry = 0; ntry < 5; ntry++)
                     {
                         using (HttpClient hc = CreateHttpClient())
                         {
-                            hc.Timeout = TimeSpan.FromMilliseconds(5000 + ntry * 2000);
+                            hc.Timeout = TimeSpan.FromMilliseconds(8000 + ntry * 2000);
 
                             try
                             {
                                 var resp = await hc.GetAsync(url).ConfigureAwait(false);
                                 if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                                 {
-                                    string data = await hc.GetStringAsync(url).ConfigureAwait(false);
-                                    foreach (string part in PrepareParts(data))
+                                    string html = await hc.GetStringAsync(url).ConfigureAwait(false);
+                                    var results = await GetResultsAsync(html).ConfigureAwait(false);
+
+                                    if (results != null)
                                     {
-                                        var result = await ReadPart(part).ConfigureAwait(false);
-                                        if (result != null)
+                                        foreach (var result in results)
                                         {
-                                            result.Name = HandleCfEmail(result.Name);
-                                            list.Add(result);
+                                            if (result != null)
+                                            {
+                                                result.Name = HandleCfEmail(result.Name);
+                                                list.Add(result);
+                                            }
                                         }
+
+                                        if (results.FirstOrDefault() != null) break;
                                     }
-                                    break;
                                 }
                                 else
                                 {
                                     await Task.Delay(250).ConfigureAwait(false);
                                 }
                             }
-                            catch (TaskCanceledException)
+                            catch
                             {
                                 await Task.Delay(250).ConfigureAwait(false);
                             }
@@ -95,28 +102,41 @@ namespace MagnetX.Searcher.WebSearcher
         }
 
         /// <summary>
+        /// <see cref="TestAsync"/>方法使用的关键词。
+        /// </summary>
+        protected const string TestKeyword = "电影";
+
+        /// <summary>
+        /// <see cref="TestAsync"/>中Http请求的超时时间。
+        /// </summary>
+        protected const int TestTimeout = 15000;
+
+        /// <summary>
         /// 测试该源是否可用的方法。
         /// </summary>
         /// <returns></returns>
         public override async Task<TestResults> TestAsync()
         {
-            string url = await GetURL("电影", 1).ConfigureAwait(false);
+            string url = await GetURLAsync(TestKeyword, 1).ConfigureAwait(false);
             using (HttpClient hc = CreateHttpClient())
             {
-                hc.Timeout = TimeSpan.FromMilliseconds(10000);
+                hc.Timeout = TimeSpan.FromMilliseconds(TestTimeout);
                 try
                 {
                     var resp = await hc.GetAsync(url).ConfigureAwait(false);
                     if (resp.StatusCode == System.Net.HttpStatusCode.OK)
                     {
-                        string data = await hc.GetStringAsync(url).ConfigureAwait(false);
-                        foreach (string part in PrepareParts(data))
-                        {
-                            var result = await ReadPart(part).ConfigureAwait(false);
-                            if (result != null) return TestResults.OK;
-                        }
+                        string html = await hc.GetStringAsync(url).ConfigureAwait(false);
+                        var results = await GetResultsAsync(html).ConfigureAwait(false);
 
-                        return TestResults.FormatError;
+                        if (results != null && results.FirstOrDefault() != null)
+                        {
+                            return TestResults.OK;
+                        }
+                        else
+                        {
+                            return TestResults.FormatError;
+                        }
                     }
                     else
                     {
@@ -135,25 +155,18 @@ namespace MagnetX.Searcher.WebSearcher
         }
 
         /// <summary>
-        /// 抽象方法，用于获取指定关键字制定页号的搜索URL。
+        /// 抽象方法，用于获取指定关键字指定页号的资源所在的URL。
         /// </summary>
         /// <param name="word">关键字</param>
         /// <param name="page">页号</param>
         /// <returns></returns>
-        protected abstract Task<string> GetURL(string word, int page);
-
-        /// <summary>
-        /// 抽象方法，对网页的原始内容进行预处理，返回若干个不同的分段，各个分段包含一个完整的结果。
-        /// </summary>
-        /// <param name="content">原始内容</param>
-        /// <returns></returns>
-        protected abstract IEnumerable<string> PrepareParts(string content);
+        protected abstract Task<string> GetURLAsync(string word, int page);
 
         /// <summary>
         /// 抽象方法，用于解析从GetURL方法获得的分段，返回Result类型的结果。
         /// </summary>
         /// <param name="part">分段</param>
         /// <returns></returns>
-        protected abstract Task<Result> ReadPart(string part);
+        protected abstract Task<IEnumerable<Result>> GetResultsAsync(string html);
     }
 }
