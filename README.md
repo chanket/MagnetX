@@ -39,8 +39,9 @@ class FooWebSearcher : SimpleWebSearcher      //通过SimpleWebSearcher间接继
     }
 
     //可选的覆盖方法
-    //在这里可以对基类得到的结果进行进一步处理（如果必要），例如去除一些标签。
-    //有时正则表达式无法直接得到最终的结果时，也可以在这个方法里做进一步处理。
+    //在这里可以对基类得到的结果进行进一步处理，例如去除一些标签。
+    //有时正则表达式无法直接得到最终结果（例如，需要参考资源详情页面才能获得资源哈希值），
+    //也可以在这个方法里做进一步处理。
     protected override async Task<Result> GetResultAsync(string part)
     {
         Result result = await base.GetResultAsync(part).ConfigureAwait(false);  //获得基类的得到的中间结果
