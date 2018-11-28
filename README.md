@@ -28,6 +28,7 @@ class FooWebSearcher : SimpleWebSearcher      //通过SimpleWebSearcher间接继
     }
 
     //必须实现的无参数构造函数
+    //通过传递给基类5个参数快速实现一个网页爬虫源。
     public CilibaWebSearcher()
         : base("foo.biz",                       //源的友好名称。
               "<div class=\"search-item\">",    //每一个搜索结果的前导特征字符串。基类会对结果用这个字符串进行切割，并处理从下标1开始的字串。
